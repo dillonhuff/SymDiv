@@ -27,6 +27,7 @@ Engine();
 ~Engine();
   const Symbol& addSymbol(SymbolType t);
   const Constraint& getConstraint(Symbol& s) const;
+  const Symbol* getValueSym(Symbol& s) const;
   const Symbol& executeBinop(OpCode c, const Symbol* lhs, const Symbol* rhs);
 };
 

@@ -7,7 +7,10 @@ using namespace std;
 bool BinaryPredicate::operator==(const Constraint& other) const {
   if (other.isBinaryPredicate() && Constraint::operator==(other)) {
     auto otherPred = static_cast<const BinaryPredicate&>(other);
-    return *rhs == *otherPred.rhs && *lhs == *otherPred.lhs;
+    bool lhsRes = *lhs == otherPred.lhs;
+    auto otherRhs = otherPred.rhs;
+    bool rhsRes =  *rhs == otherRhs;
+    return lhsRes && rhsRes;
   }
   return false;
 }

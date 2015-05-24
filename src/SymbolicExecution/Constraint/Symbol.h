@@ -17,8 +17,11 @@ class Symbol : public Term {
   Symbol() { kind = SYMBOL; t = INT_32; id = -1; }
   Symbol(SymbolType st, int i) { t = st; id = i; }
   Symbol& operator=(const Symbol& other) { t = other.t; id = other.id; return *this; }
-  bool operator==(const Symbol& other) const { return id == other.id; }
-  bool operator<(const Symbol& other) const { return id < other.id; }
+
+  virtual bool isSymbol() const { return true; }
+  virtual bool operator==(const Term& other) const;
+  virtual bool operator==(const Term* other) const;
+  virtual bool operator<(const Symbol& other) const { return id < other.id; }
 };
 
 #endif

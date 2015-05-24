@@ -56,6 +56,12 @@ const Constraint& Engine::getConstraint(Symbol& s) const {
   return *(symValConstraintPair.second);
 }
 
+const Symbol* Engine::getValueSym(Symbol& s) const {
+  auto m = symbolicMemory;
+  auto symValConstraintPair = m[s];
+  return symValConstraintPair.first;
+}
+
 const Symbol& Engine::executeBinop(OpCode c, const Symbol* lhs, const Symbol* rhs) {
   auto resVal = mkSymbol(INT_32);
   auto resPtr = mkSymbol(PTR);

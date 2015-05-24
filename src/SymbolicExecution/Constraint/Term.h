@@ -18,7 +18,10 @@ class Term {
   TermKind kind;
 
  public:
-  virtual bool operator==(const Term& other) const { return kind == other.kind; }
+  virtual bool isSymbol() const { return false; }
+  virtual bool isBinaryFunction() const { return false; }
+  virtual bool operator==(const Term& other) const;
+  virtual bool operator==(const Term* other) const;
 };
 
 #endif

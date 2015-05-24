@@ -1,9 +1,18 @@
 #ifndef MINUS_H
 #define MINUS_H
 
-class Minus : public Term {
+#include "SymbolicExecution/Constraint/BinaryFunction.h"
+
+class Minus : public BinaryFunction {
  public:
-  Minus(const Term* l, const Term* r) { kind = MINUS; }
+  Minus(const Term* l, const Term* r)
+    : BinaryFunction::BinaryFunction(l, r) {
+    kind = MINUS;
+  }
+
+  virtual bool operator==(const Term* other) const {
+    return BinaryFunction::operator==(other); 
+  }
 };
 
 #endif

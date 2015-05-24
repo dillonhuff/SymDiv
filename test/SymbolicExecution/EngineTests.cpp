@@ -26,7 +26,7 @@ void execAdd() {
   auto rhs = e.addSymbol(INT_32);
   auto res = e.executeBinop(ADD, &lhs, &rhs);
   auto add = Plus(&lhs, &rhs);
-  Eq expected(&res, &add);
+  Eq expected(e.getValueSym(res), &add);
   auto actual = e.getConstraint(res);
   test(expected, actual);
 }
