@@ -5,7 +5,7 @@ BUILD_DIR := build
 
 # Compiler settings
 CXX := g++
-CXXFLAGS := -std=c++11 -fno-rtti -O0 -g -I./$(SRC_DIR) -I./$(TEST_DIR)
+CXXFLAGS := -std=c++11 -fno-rtti -O2 -g -I./$(SRC_DIR) -I./$(TEST_DIR)
 PLUGIN_CXXFLAGS := -fpic
 
 # Individual project components

@@ -2,7 +2,8 @@
 #define TERM_H
 
 enum OpCode {
-  ADD
+  ADD,
+  SUB
 };
 
 class Term {

@@ -12,8 +12,9 @@ class Constraint {
   ConstraintKind kind;
 
  public:
-  bool operator==(const Constraint& other) const;
+  virtual bool operator==(const Constraint& other) const;
   ConstraintKind getKind() const;
+  virtual bool isBinaryPredicate() const { return false; }
 };
 
 #endif

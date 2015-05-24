@@ -1,12 +1,15 @@
 #ifndef EQ_H
 #define EQ_H
 
-#include "SymbolicExecution/Constraint/Constraint.h"
+#include "SymbolicExecution/Constraint/BinaryPredicate.h"
 #include "SymbolicExecution/Constraint/Term.h"
 
-class Eq : public Constraint {
+class Eq : public BinaryPredicate {
  public:
-  Eq(const Term& l, const Term& r) { kind = EQ; }
+  Eq(const Term& l, const Term& r)
+    : BinaryPredicate::BinaryPredicate(l, r) {
+    kind = EQ;
+  }
 };
 
 #endif
