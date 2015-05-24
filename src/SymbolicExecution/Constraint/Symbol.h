@@ -14,7 +14,7 @@ class Symbol : public Term {
   int id;
 
  public:
-  Symbol() { t = INT_32; id = -1; }
+  Symbol() { kind = SYMBOL; t = INT_32; id = -1; }
   Symbol(SymbolType st, int i) { t = st; id = i; }
   Symbol& operator=(const Symbol& other) { t = other.t; id = other.id; return *this; }
   bool operator==(const Symbol& other) const { return id == other.id; }

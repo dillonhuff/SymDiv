@@ -4,12 +4,17 @@
 #include "SymbolicExecution/Constraint/BinaryPredicate.h"
 #include "SymbolicExecution/Constraint/Term.h"
 
+#include <iostream>
+
+using namespace std;
+
 class Eq : public BinaryPredicate {
  public:
-  Eq(const Term& l, const Term& r)
+  Eq(const Term* l, const Term* r)
     : BinaryPredicate::BinaryPredicate(l, r) {
     kind = EQ;
   }
+
 };
 
 #endif

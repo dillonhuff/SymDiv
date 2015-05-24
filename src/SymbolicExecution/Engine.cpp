@@ -18,13 +18,13 @@ Engine::~Engine() {
   //  }
 }
 
-Constraint* Engine::mkEq(const Term& lhs, const Term& rhs) {
+Constraint* Engine::mkEq(const Term* lhs, const Term* rhs) {
   auto eq = new Eq(lhs, rhs);
   allConstraints.push_back(eq);
   return eq;
 }
 
-Term* Engine::mkPlus(const Term& lhs, const Term& rhs) {
+Term* Engine::mkPlus(const Term* lhs, const Term* rhs) {
   auto plus = new Plus(lhs, rhs);
   allTerms.push_back(plus);
   return plus;
@@ -56,10 +56,10 @@ const Constraint& Engine::getConstraint(Symbol& s) const {
   return *(symValConstraintPair.second);
 }
 
-const Symbol& Engine::executeBinop(OpCode c, const Symbol& lhs, const Symbol& rhs) {
+const Symbol& Engine::executeBinop(OpCode c, const Symbol* lhs, const Symbol* rhs) {
   auto resVal = mkSymbol(INT_32);
   auto resPtr = mkSymbol(PTR);
-  auto addCon = mkEq(*resVal, *mkPlus(lhs, rhs));
+  auto addCon = mkEq(resVal, mkPlus(lhs, rhs));
   symbolicMemory[*resPtr] = pair<Symbol*, Constraint*>(resVal, addCon);
   return *resPtr;
 }

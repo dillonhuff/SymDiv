@@ -5,7 +5,7 @@
 
 class Plus : public Term {
  public:
-  Plus(const Term& l, const Term& r) {}
+  Plus(const Term* l, const Term* r) { kind = PLUS; }
 };
 
 #endif

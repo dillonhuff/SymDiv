@@ -31,8 +31,9 @@ void execAdd() {
   Engine e;
   auto lhs = e.addSymbol(INT_32);
   auto rhs = e.addSymbol(INT_32);
-  auto res = e.executeBinop(ADD, lhs, rhs);
-  Constraint expected(Eq(res, Plus(lhs, rhs)));
+  auto res = e.executeBinop(ADD, &lhs, &rhs);
+  auto add = Plus(&lhs, &rhs);
+  Eq expected(&res, &add);
   auto actual = e.getConstraint(res);
   test(expected, actual);
 }
@@ -41,8 +42,9 @@ void execSub() {
   Engine e;
   auto lhs = e.addSymbol(INT_32);
   auto rhs = e.addSymbol(INT_32);
-  auto res = e.executeBinop(SUB, lhs, rhs);
-  Constraint expected(Eq(res, Minus(lhs, rhs)));
+  auto res = e.executeBinop(SUB, &lhs, &rhs);
+  auto sub = static_cast<Term>(Minus(&lhs, &rhs));
+  Eq expected(&res, &sub);
   auto actual = e.getConstraint(res);
   test(expected, actual);
 }

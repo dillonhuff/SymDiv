@@ -6,11 +6,11 @@
 
 class BinaryPredicate : public Constraint {
  protected:
-  const Term& lhs;
-  const Term& rhs;
+  const Term* lhs;
+  const Term* rhs;
 
  public:
-  BinaryPredicate(const Term& l, const Term& r)
+  BinaryPredicate(const Term* l, const Term* r)
     : lhs(l), rhs(r) {
     kind = EQ;
   }

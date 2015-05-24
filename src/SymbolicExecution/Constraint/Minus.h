@@ -3,7 +3,7 @@
 
 class Minus : public Term {
  public:
-  Minus(const Term& l, const Term& r) {}
+  Minus(const Term* l, const Term* r) { kind = MINUS; }
 };
 
 #endif
