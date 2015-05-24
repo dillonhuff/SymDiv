@@ -1,6 +1,7 @@
 #include "SymbolicExecution/Constraint/Eq.h"
 #include "SymbolicExecution/Constraint/Minus.h"
 #include "SymbolicExecution/Constraint/Plus.h"
+#include "SymbolicExecution/Constraint/Times.h"
 #include "SymbolicExecution/Constraint/True.h"
 #include "SymbolicExecution/Engine.h"
 
@@ -35,6 +36,12 @@ Term* Engine::mkMinus(const Term* lhs, const Term* rhs) {
   auto minus = new Minus(lhs, rhs);
   allTerms.push_back(minus);
   return minus;
+}
+
+Term* Engine::mkTimes(const Term* lhs, const Term* rhs) {
+  auto times = new Times(lhs, rhs);
+  allTerms.push_back(times);
+  return times;
 }
 
 Symbol* Engine::mkSymbol(SymbolType t) {
@@ -75,6 +82,8 @@ const Symbol* Engine::executeBinop(OpCode c, const Symbol* lhs, const Symbol* rh
     return executeAdd(lhs, rhs);
   case(SUB):
     return executeSub(lhs, rhs);
+  case(MUL):
+    return executeMul(lhs, rhs);
   default:
     cout << "Error: Bad opcode in executeBinop" << endl;
     throw;
@@ -97,6 +106,16 @@ const Symbol* Engine::executeSub(const Symbol* lhs, const Symbol* rhs) {
   auto lhsVal = getValueSym(lhs);
   auto rhsVal = getValueSym(rhs);
   auto subCon = mkEq(resVal, mkMinus(lhsVal, rhsVal));
+  symbolicMemory[*resPtr] = pair<Symbol*, Constraint*>(resVal, subCon);
+  return resPtr;
+}
+
+const Symbol* Engine::executeMul(const Symbol* lhs, const Symbol* rhs) {
+  auto resVal = mkSymbol(INT_32);
+  auto resPtr = mkSymbol(PTR);
+  auto lhsVal = getValueSym(lhs);
+  auto rhsVal = getValueSym(rhs);
+  auto subCon = mkEq(resVal, mkTimes(lhsVal, rhsVal));
   symbolicMemory[*resPtr] = pair<Symbol*, Constraint*>(resVal, subCon);
   return resPtr;
 }

@@ -3,6 +3,7 @@
 #include "SymbolicExecution/Constraint/Plus.h"
 #include "SymbolicExecution/Constraint/Symbol.h"
 #include "SymbolicExecution/Constraint/Term.h"
+#include "SymbolicExecution/Constraint/Times.h"
 #include "SymbolicExecution/Constraint/True.h"
 #include "SymbolicExecution/Engine.h"
 #include "SymbolicExecution/EngineTests.h"
@@ -28,8 +29,6 @@ void execAdd() {
   auto add = Plus(e.getValueSym(lhs), e.getValueSym(rhs));
   Eq expected(e.getValueSym(res), &add);
   auto actual = e.getConstraint(res);
-  //  cout << "Expected " << expected.toString() << endl;
-  //  cout << "Actual " << actual->toString() << endl;
   test(&expected, actual);
 }
 
@@ -44,10 +43,22 @@ void execSub() {
   test(&expected, actual);
 }
 
+void execMul() {
+  Engine e;
+  auto lhs = e.addSymbol(INT_32);
+  auto rhs = e.addSymbol(INT_32);
+  auto res = e.executeBinop(MUL, lhs, rhs);
+  auto times = static_cast<Term>(Times(e.getValueSym(lhs), e.getValueSym(rhs)));
+  Eq expected(e.getValueSym(res), &times);
+  auto actual = e.getConstraint(res);
+  test(&expected, actual);
+}
+
 void runEngineTests() {
   cout << "--------------------- Starting Engine Tests ---------------------" << endl;
   initializeEngine();
   execAdd();
   execSub();
+  execMul();
   cout << "-----------------------------------------------------------------" << endl;
 }

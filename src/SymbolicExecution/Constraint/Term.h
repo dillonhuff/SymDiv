@@ -5,14 +5,16 @@
 
 enum OpCode {
   ADD,
-  SUB
+  SUB,
+  MUL
 };
 
 enum TermKind {
   SYMBOL,
   CONSTANT_VALUE,
   MINUS,
-  PLUS
+  PLUS,
+  TIMES
 };
 
 class Term {

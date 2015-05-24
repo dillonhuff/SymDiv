@@ -22,10 +22,12 @@ class Engine {
   Constraint* mkEq(const Term* lhs, const Term* rhs);
   Term* mkPlus(const Term* lhs, const Term* rhs);
   Term* mkMinus(const Term* lhs, const Term* rhs);
+  Term* mkTimes(const Term* lhs, const Term* rhs);
   Symbol* mkSymbol(SymbolType t);
 
   const Symbol* executeAdd(const Symbol* lhs, const Symbol* rhs);
   const Symbol* executeSub(const Symbol* lhs, const Symbol* rhs);
+  const Symbol* executeMul(const Symbol* lhs, const Symbol* rhs);
 
  public:
   Engine();
