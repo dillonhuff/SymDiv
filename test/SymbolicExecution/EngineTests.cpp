@@ -6,18 +6,11 @@
 #include "SymbolicExecution/Constraint/True.h"
 #include "SymbolicExecution/Engine.h"
 #include "SymbolicExecution/EngineTests.h"
+#include "SymbolicExecution/TestUtils.h"
 
 #include <iostream>
 
 using namespace std;
-
-void test(const Constraint& expected, const Constraint& actual) {
-  if (expected == actual) {
-    cout << "Test passed" << endl;
-  } else {
-    cout << "Test FAILED" << endl;
-  }
-}
 
 void initializeEngine() {
   Engine e;
