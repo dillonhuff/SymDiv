@@ -2,6 +2,7 @@
 #include "SymbolicExecution/Constraint/Plus.h"
 #include "SymbolicExecution/Constraint/Symbol.h"
 #include "SymbolicExecution/Constraint/Term.h"
+#include "SymbolicExecution/Constraint/True.h"
 #include "SymbolicExecution/Engine.h"
 #include "SymbolicExecution/EngineTests.h"
 
@@ -21,7 +22,7 @@ void initializeEngine() {
   Engine e;
   auto s = e.addSymbol(INT_32);
   auto actual = e.getConstraint(s);
-  Constraint expected;
+  True expected;
   test(expected, actual);
 }
 

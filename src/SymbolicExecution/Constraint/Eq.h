@@ -6,7 +6,7 @@
 
 class Eq : public Constraint {
  public:
-  Eq(const Term& l, const Term& r) {}
+  Eq(const Term& l, const Term& r) { kind = EQ; }
 };
 
 #endif

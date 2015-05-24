@@ -4,11 +4,21 @@
 #include "SymbolicExecution/Constraint/Term.h"
 
 enum SymbolType {
-  INT_32
+  INT_32,
+  PTR
 };
 
 class Symbol : public Term {
-  
+ protected:
+  SymbolType t;
+  int id;
+
+ public:
+  Symbol() { t = INT_32; id = -1; }
+  Symbol(SymbolType st, int i) { t = st; id = i; }
+  Symbol& operator=(const Symbol& other) { t = other.t; id = other.id; return *this; }
+  bool operator==(const Symbol& other) const { return id == other.id; }
+  bool operator<(const Symbol& other) const { return id < other.id; }
 };
 
 #endif
