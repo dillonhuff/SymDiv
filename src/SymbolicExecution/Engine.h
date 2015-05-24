@@ -13,7 +13,7 @@ using namespace std;
 
 class Engine {
  protected:
-  map<Symbol, pair<Symbol*, Constraint*>> symbolicMemory;
+  map<const Symbol*, pair<Symbol*, Constraint*>> symbolicMemory;
   vector<Constraint*> allConstraints;
   vector<Term*> allTerms;
   int nextSymId;

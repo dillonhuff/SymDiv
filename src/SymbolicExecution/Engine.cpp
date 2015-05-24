@@ -60,19 +60,19 @@ Constraint* Engine::mkTrue() {
 const Symbol* Engine::addSymbol(SymbolType t) {
   auto sVal = mkSymbol(t);
   auto sPtr = mkSymbol(PTR);
-  symbolicMemory[*sPtr] = pair<Symbol*, Constraint*>(sVal, mkTrue());
+  symbolicMemory[sPtr] = pair<Symbol*, Constraint*>(sVal, mkTrue());
   return sPtr;
 }
 
 const Constraint* Engine::getConstraint(const Symbol* s) const {
   auto m = symbolicMemory;
-  auto symValConstraintPair = m[*s];
+  auto symValConstraintPair = m[s];
   return symValConstraintPair.second;
 }
 
 const Symbol* Engine::getValueSym(const Symbol* s) const {
   auto m = symbolicMemory;
-  auto symValConstraintPair = m[*s];
+  auto symValConstraintPair = m[s];
   return symValConstraintPair.first;
 }
 
@@ -96,7 +96,7 @@ const Symbol* Engine::executeAdd(const Symbol* lhs, const Symbol* rhs) {
   auto lhsVal = getValueSym(lhs);
   auto rhsVal = getValueSym(rhs);
   auto addCon = mkEq(resVal, mkPlus(lhsVal, rhsVal));
-  symbolicMemory[*resPtr] = pair<Symbol*, Constraint*>(resVal, addCon);
+  symbolicMemory[resPtr] = pair<Symbol*, Constraint*>(resVal, addCon);
   return resPtr;
 }
 
@@ -106,7 +106,7 @@ const Symbol* Engine::executeSub(const Symbol* lhs, const Symbol* rhs) {
   auto lhsVal = getValueSym(lhs);
   auto rhsVal = getValueSym(rhs);
   auto subCon = mkEq(resVal, mkMinus(lhsVal, rhsVal));
-  symbolicMemory[*resPtr] = pair<Symbol*, Constraint*>(resVal, subCon);
+  symbolicMemory[resPtr] = pair<Symbol*, Constraint*>(resVal, subCon);
   return resPtr;
 }
 
@@ -116,6 +116,6 @@ const Symbol* Engine::executeMul(const Symbol* lhs, const Symbol* rhs) {
   auto lhsVal = getValueSym(lhs);
   auto rhsVal = getValueSym(rhs);
   auto subCon = mkEq(resVal, mkTimes(lhsVal, rhsVal));
-  symbolicMemory[*resPtr] = pair<Symbol*, Constraint*>(resVal, subCon);
+  symbolicMemory[resPtr] = pair<Symbol*, Constraint*>(resVal, subCon);
   return resPtr;
 }
