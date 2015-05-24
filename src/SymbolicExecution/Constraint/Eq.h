@@ -15,6 +15,10 @@ class Eq : public BinaryPredicate {
     kind = EQ;
   }
 
+  virtual bool operator==(const Constraint* other) const {
+    return BinaryPredicate::operator==(other);
+  }
+
 };
 
 #endif

@@ -5,4 +5,5 @@ bool BinaryFunction::operator==(const Term* other) const {
     auto otherBFunc = static_cast<const BinaryFunction*>(other);
     return *rhs == otherBFunc->rhs && *lhs == otherBFunc->lhs;
   }
+  return false;
 }

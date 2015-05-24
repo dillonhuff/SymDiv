@@ -15,20 +15,20 @@ void trueEqualsTrue() {
   True c1;
   True c2;
 
-  test(c1, c2);
+  test(&c1, &c2);
 }
 
 void falseEqualsFalse() {
   False c1;
   False c2;
 
-  test(c1, c2);
+  test(&c1, &c2);
 }
 
 void falseNEQTrue() {
   False c1;
   True c2;
-  testNEQ(c1, c2);
+  testNEQ(&c1, &c2);
 }
 
 void equalSymsEqual() {
@@ -38,7 +38,7 @@ void equalSymsEqual() {
   Eq eq1(&s1, &s2);
   Eq eq2(&s1, &s2);
 
-  test(eq1, eq2);
+  test(&eq1, &eq2);
 }
 
 void sameSymsEqual() {
@@ -50,7 +50,7 @@ void sameSymsEqual() {
   Symbol s4(INT_32, 1);
   Eq eq2(&s3, &s4);
 
-  test(eq1, eq2);
+  test(&eq1, &eq2);
 }
 
 void eqsWithDifferentArgsNotEqual() {
@@ -62,7 +62,7 @@ void eqsWithDifferentArgsNotEqual() {
   Symbol s4(INT_32, 3);
   Eq eq2(&s3, &s4);
 
-  testNEQ(eq1, eq2);
+  testNEQ(&eq1, &eq2);
 }
 
 void eqPlusAndEqMinusNotEqual_1() {
@@ -80,7 +80,7 @@ void eqPlusAndEqMinusNotEqual_1() {
   Minus minus(&s4, &s5);
   Eq minusEq(&s6, &minus);
 
-  testNEQ(plusEq, minusEq);
+  testNEQ(&plusEq, &minusEq);
 }
 
 void eqPlusAndEqMinusNotEqual_2() {
@@ -94,7 +94,7 @@ void eqPlusAndEqMinusNotEqual_2() {
   Minus minus(&s1, &s2);
   Eq minusEq(&s3, &minus);
 
-  testNEQ(plusEq, minusEq);
+  testNEQ(&plusEq, &minusEq);
 }
 
 void identicalEqsEqual() {
@@ -110,7 +110,7 @@ void identicalEqsEqual() {
   Plus plus2(&s4, &s5);
   Eq eq2(&s6, &plus2);
 
-  test(eq1, eq2);
+  test(&eq1, &eq2);
 }
 
 void runConstraintTests() {

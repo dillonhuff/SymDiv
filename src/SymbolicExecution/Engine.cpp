@@ -1,4 +1,5 @@
 #include "SymbolicExecution/Constraint/Eq.h"
+#include "SymbolicExecution/Constraint/Minus.h"
 #include "SymbolicExecution/Constraint/Plus.h"
 #include "SymbolicExecution/Constraint/True.h"
 #include "SymbolicExecution/Engine.h"
@@ -30,6 +31,12 @@ Term* Engine::mkPlus(const Term* lhs, const Term* rhs) {
   return plus;
 }
 
+Term* Engine::mkMinus(const Term* lhs, const Term* rhs) {
+  auto minus = new Minus(lhs, rhs);
+  allTerms.push_back(minus);
+  return minus;
+}
+
 Symbol* Engine::mkSymbol(SymbolType t) {
   auto s = new Symbol(t, nextSymId);
   nextSymId++;
@@ -43,29 +50,53 @@ Constraint* Engine::mkTrue() {
   return t;
 }
 
-const Symbol& Engine::addSymbol(SymbolType t) {
+const Symbol* Engine::addSymbol(SymbolType t) {
   auto sVal = mkSymbol(t);
   auto sPtr = mkSymbol(PTR);
   symbolicMemory[*sPtr] = pair<Symbol*, Constraint*>(sVal, mkTrue());
-  return *sPtr;
+  return sPtr;
 }
 
-const Constraint& Engine::getConstraint(Symbol& s) const {
+const Constraint* Engine::getConstraint(const Symbol* s) const {
   auto m = symbolicMemory;
-  auto symValConstraintPair = m[s];
-  return *(symValConstraintPair.second);
+  auto symValConstraintPair = m[*s];
+  return symValConstraintPair.second;
 }
 
-const Symbol* Engine::getValueSym(Symbol& s) const {
+const Symbol* Engine::getValueSym(const Symbol* s) const {
   auto m = symbolicMemory;
-  auto symValConstraintPair = m[s];
+  auto symValConstraintPair = m[*s];
   return symValConstraintPair.first;
 }
 
-const Symbol& Engine::executeBinop(OpCode c, const Symbol* lhs, const Symbol* rhs) {
+const Symbol* Engine::executeBinop(OpCode c, const Symbol* lhs, const Symbol* rhs) {
+  switch(c) {
+  case(ADD):
+    return executeAdd(lhs, rhs);
+  case(SUB):
+    return executeSub(lhs, rhs);
+  default:
+    cout << "Error: Bad opcode in executeBinop" << endl;
+    throw;
+  }
+}
+
+const Symbol* Engine::executeAdd(const Symbol* lhs, const Symbol* rhs) {
   auto resVal = mkSymbol(INT_32);
   auto resPtr = mkSymbol(PTR);
-  auto addCon = mkEq(resVal, mkPlus(lhs, rhs));
+  auto lhsVal = getValueSym(lhs);
+  auto rhsVal = getValueSym(rhs);
+  auto addCon = mkEq(resVal, mkPlus(lhsVal, rhsVal));
   symbolicMemory[*resPtr] = pair<Symbol*, Constraint*>(resVal, addCon);
-  return *resPtr;
+  return resPtr;
+}
+
+const Symbol* Engine::executeSub(const Symbol* lhs, const Symbol* rhs) {
+  auto resVal = mkSymbol(INT_32);
+  auto resPtr = mkSymbol(PTR);
+  auto lhsVal = getValueSym(lhs);
+  auto rhsVal = getValueSym(rhs);
+  auto subCon = mkEq(resVal, mkMinus(lhsVal, rhsVal));
+  symbolicMemory[*resPtr] = pair<Symbol*, Constraint*>(resVal, subCon);
+  return resPtr;
 }

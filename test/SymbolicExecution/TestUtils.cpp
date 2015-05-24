@@ -4,16 +4,16 @@
 
 using namespace std;
 
-void test(const Constraint& expected, const Constraint& actual) {
-  if (expected == actual) {
+void test(const Constraint* expected, const Constraint* actual) {
+  if (*expected == actual) {
     cout << "Test passed" << endl;
   } else {
     cout << "Test FAILED" << endl;
   }
 }
 
-void testNEQ(const Constraint& expected, const Constraint& actual) {
-  if (expected == actual) {
+void testNEQ(const Constraint* expected, const Constraint* actual) {
+  if (*expected == actual) {
     cout << "Test FAILED" << endl;
   } else {
     cout << "Test passed" << endl;

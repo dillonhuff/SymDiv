@@ -3,7 +3,7 @@
 
 #include "SymbolicExecution/Constraint/Constraint.h"
 
-void test(const Constraint& expected, const Constraint& actual);
-void testNEQ(const Constraint& expected, const Constraint& actual);
+void test(const Constraint* expected, const Constraint* actual);
+void testNEQ(const Constraint* expected, const Constraint* actual);
 
 #endif

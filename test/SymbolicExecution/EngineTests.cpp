@@ -17,29 +17,31 @@ void initializeEngine() {
   auto s = e.addSymbol(INT_32);
   auto actual = e.getConstraint(s);
   True expected;
-  test(expected, actual);
+  test(&expected, actual);
 }
 
 void execAdd() {
   Engine e;
   auto lhs = e.addSymbol(INT_32);
   auto rhs = e.addSymbol(INT_32);
-  auto res = e.executeBinop(ADD, &lhs, &rhs);
-  auto add = Plus(&lhs, &rhs);
+  auto res = e.executeBinop(ADD, lhs, rhs);
+  auto add = Plus(e.getValueSym(lhs), e.getValueSym(rhs));
   Eq expected(e.getValueSym(res), &add);
   auto actual = e.getConstraint(res);
-  test(expected, actual);
+  //  cout << "Expected " << expected.toString() << endl;
+  //  cout << "Actual " << actual->toString() << endl;
+  test(&expected, actual);
 }
 
 void execSub() {
   Engine e;
   auto lhs = e.addSymbol(INT_32);
   auto rhs = e.addSymbol(INT_32);
-  auto res = e.executeBinop(SUB, &lhs, &rhs);
-  auto sub = static_cast<Term>(Minus(&lhs, &rhs));
-  Eq expected(&res, &sub);
+  auto res = e.executeBinop(SUB, lhs, rhs);
+  auto sub = static_cast<Term>(Minus(e.getValueSym(lhs), e.getValueSym(rhs)));
+  Eq expected(e.getValueSym(res), &sub);
   auto actual = e.getConstraint(res);
-  test(expected, actual);
+  test(&expected, actual);
 }
 
 void runEngineTests() {

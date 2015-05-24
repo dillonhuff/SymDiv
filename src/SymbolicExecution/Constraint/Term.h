@@ -1,6 +1,8 @@
 #ifndef TERM_H
 #define TERM_H
 
+#include <iostream>
+
 enum OpCode {
   ADD,
   SUB
@@ -22,6 +24,8 @@ class Term {
   virtual bool isBinaryFunction() const { return false; }
   virtual bool operator==(const Term& other) const;
   virtual bool operator==(const Term* other) const;
+
+  virtual std::string toString() const { throw; }
 };
 
 #endif

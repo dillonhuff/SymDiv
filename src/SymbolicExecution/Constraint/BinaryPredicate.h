@@ -4,6 +4,8 @@
 #include "SymbolicExecution/Constraint/Constraint.h"
 #include "SymbolicExecution/Constraint/Term.h"
 
+#include <string>
+
 class BinaryPredicate : public Constraint {
  protected:
   const Term* lhs;
@@ -16,8 +18,16 @@ class BinaryPredicate : public Constraint {
   }
 
   virtual bool isBinaryPredicate() const { return true; }
+  virtual bool operator==(const Constraint* other) const;
 
-  virtual bool operator==(const Constraint& other) const;
+  virtual std::string toStrint() const {
+    std::string res = "(";
+    res += constraintKindToString(kind) + " ";
+    res += lhs->toString() + " ";
+    res += rhs->toString() + " ";
+    res += ")";
+    return res;
+  }
 };
 
 #endif
