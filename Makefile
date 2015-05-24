@@ -1,35 +1,3 @@
-# LLVM path settings
-LLVM_SRC_PATH :=/home/dillon/cppWorkspace/llvm
-LLVM_BUILD_PATH := /home/dillon/cppWorkspace/build
-LLVM_BIN_PATH := $(LLVM_BUILD_PATH)/bin
-
-LLVM_CXXFLAGS := `$(LLVM_BIN_PATH)/llvm-config --cxxflags`
-LLVM_LDFLAGS := `$(LLVM_BIN_PATH)/llvm-config --ldflags --libs --system-libs`
-
-LLVM_LDFLAGS_NOLIBS := `$(LLVM_BIN_PATH)/llvm-config --ldflags`
-PLUGIN_LDFLAGS := -shared
-
-CLANG_INCLUDES := \
-	-I$(LLVM_SRC_PATH)/tools/clang/include \
-	-I$(LLVM_BUILD_PATH)/tools/clang/include
-
-CLANG_LIBS := \
-	-Wl,--start-group \
-	-lclangAnalysis \
-	-lclangBasic \
-	-lclangCodeGen \
-	-lclangDriver \
-	-lclangEdit \
-	-lclangFrontend \
-	-lclangLex \
-	-lclangParse \
-	-lclangSema \
-	-lclangEdit \
-	-lclangASTMatchers \
-	-lclangRewrite \
-	-lclangRewriteFrontend \
-	-Wl,--end-group
-
 # Project path settings
 SRC_DIR := src
 TEST_DIR := test
@@ -37,7 +5,7 @@ BUILD_DIR := build
 
 # Compiler settings
 CXX := g++
-CXXFLAGS := -fno-rtti -O0 -g -I./$(SRC_DIR) -I./$(TEST_DIR)
+CXXFLAGS := -std=c++11 -fno-rtti -O0 -g -I./$(SRC_DIR) -I./$(TEST_DIR)
 PLUGIN_CXXFLAGS := -fpic
 
 # Individual project components
