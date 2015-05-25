@@ -8,13 +8,15 @@
 #include "SymbolicExecution/Engine.h"
 #include "SymbolicExecution/EngineTests.h"
 #include "SymbolicExecution/TestUtils.h"
+#include "SymbolicExecution/Z3Solver.h"
 
 #include <iostream>
 
 using namespace std;
 
 void initializeEngine() {
-  Engine e;
+  Z3Solver solver;
+  Engine e(&solver);
   auto s = e.addSymbol(INT_32);
   auto actual = e.getConstraint(s);
   True expected;
@@ -22,7 +24,8 @@ void initializeEngine() {
 }
 
 void execAdd() {
-  Engine e;
+  Z3Solver solver;
+  Engine e(&solver);
   auto lhs = e.addSymbol(INT_32);
   auto rhs = e.addSymbol(INT_32);
   auto res = e.executeBinop(ADD, lhs, rhs);
@@ -33,7 +36,8 @@ void execAdd() {
 }
 
 void execSub() {
-  Engine e;
+  Z3Solver solver;
+  Engine e(&solver);
   auto lhs = e.addSymbol(INT_32);
   auto rhs = e.addSymbol(INT_32);
   auto res = e.executeBinop(SUB, lhs, rhs);
@@ -44,7 +48,8 @@ void execSub() {
 }
 
 void execMul() {
-  Engine e;
+  Z3Solver solver;
+  Engine e(&solver);
   auto lhs = e.addSymbol(INT_32);
   auto rhs = e.addSymbol(INT_32);
   auto res = e.executeBinop(MUL, lhs, rhs);
@@ -54,11 +59,23 @@ void execMul() {
   test(&expected, actual);
 }
 
+void execMemops() {
+  Z3Solver solver;
+  Engine e(&solver);
+  auto a = e.addSymbol(INT_32);
+  auto b = e.allocateStack(INT_32);
+  e.executeStore(a, b);
+  auto c = e.executeLoad(b);
+  auto aEqB = Eq(e.getValueSym(a), e.getValueSym(c));
+  testResult(e.stateImplies(&aEqB), "Loading store result");
+}
+
 void runEngineTests() {
   cout << "--------------------- Starting Engine Tests ---------------------" << endl;
   initializeEngine();
   execAdd();
   execSub();
   execMul();
+  execMemops();
   cout << "-----------------------------------------------------------------" << endl;
 }

@@ -3,6 +3,13 @@ SRC_DIR := src
 TEST_DIR := test
 BUILD_DIR := build
 
+# Z3 settings
+Z3_PATH := /Users/dillon/cppWorkspace/z3
+Z3_API_PATH := $(Z3_PATH)/src/api
+Z3_CPP_API_PATH := $(Z3_API_PATH)/c++
+Z3_LIB_PATH := /Library/lib/libz3.dylib
+Z3_FLAGS := -I$(Z3_API_PATH) -I$(Z3_CPP_API_PATH) 
+
 # Compiler settings
 CXX := g++
 CXXFLAGS := -std=c++11 -fno-rtti -O2 -g -I./$(SRC_DIR) -I./$(TEST_DIR)
@@ -30,11 +37,11 @@ make_builddir:
 	@test -d $(BUILD_DIR) || mkdir $(BUILD_DIR)
 
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(LLVM_CXXFLAGS) $(CLANG_INCLUDES) \
+	$(CXX) $(CXXFLAGS) $(Z3_FLAGS) $(LLVM_CXXFLAGS) $(CLANG_INCLUDES) \
 	$(CLANG_LIBS) $(LLVM_LDFLAGS) $^ -c -o $@
 
 $(BUILD_DIR)/sym_exe_tests: $(SYM_EXE_OBJS)
-	$(CXX) $(CXXFLAGS) $(LLVM_CXXFLAGS) $(CLANG_INCLUDES) $^ \
+	$(CXX) $(CXXFLAGS) $(Z3_FLAGS) $(Z3_LIB_PATH) -I/$(LLVM_CXXFLAGS) $(CLANG_INCLUDES) $^ \
 	$(CLANG_LIBS) $(LLVM_LDFLAGS) -o $@
 
 .PHONY: clean

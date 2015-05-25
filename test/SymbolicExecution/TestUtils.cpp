@@ -1,8 +1,15 @@
 #include "SymbolicExecution/TestUtils.h"
 
-#include <iostream>
-
 using namespace std;
+
+void testResult(bool res, string testName) {
+  cout << testName;
+  if (res) {
+    cout << " passed" << endl;
+  } else {
+    cout << " FAILED" << endl;
+  }
+}
 
 void test(const Constraint* expected, const Constraint* actual) {
   if (*expected == actual) {

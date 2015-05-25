@@ -9,15 +9,9 @@
 
 using namespace std;
 
-Engine::Engine() {
+Engine::Engine(ConstraintSolver* s) {
   nextSymId = 0;
-}
-
-Engine::~Engine() {
-  //  for (auto symPtr : allSymbols) {
-  //    Symbol ptr = symPtr;
-    //    delete symPtr;
-  //  }
+  solver = s;
 }
 
 Constraint* Engine::mkEq(const Term* lhs, const Term* rhs) {
@@ -118,4 +112,13 @@ const Symbol* Engine::executeMul(const Symbol* lhs, const Symbol* rhs) {
   auto subCon = mkEq(resVal, mkTimes(lhsVal, rhsVal));
   symbolicMemory[resPtr] = pair<Symbol*, Constraint*>(resVal, subCon);
   return resPtr;
+}
+
+bool Engine::stateImplies(Constraint* c) {
+  vector<Constraint*> constraintState;
+  for (auto entry : symbolicMemory) {
+    auto stateConstraint = entry.second.second;
+    constraintState.push_back(stateConstraint);
+  }
+  return solver->implies(&constraintState, c);
 }

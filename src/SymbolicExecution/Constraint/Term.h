@@ -6,7 +6,8 @@
 enum OpCode {
   ADD,
   SUB,
-  MUL
+  MUL,
+  ALLOCATE_STACK
 };
 
 enum TermKind {
