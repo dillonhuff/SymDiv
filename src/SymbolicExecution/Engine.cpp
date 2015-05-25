@@ -84,13 +84,23 @@ const Symbol* Engine::executeBinop(OpCode c, const Symbol* lhs, const Symbol* rh
   }
 }
 
+const Symbol* Engine::deref(const Symbol* ptr) {
+  return ptr;
+}
+
+void Engine::setConstraint(const Symbol* s, Constraint* c) {
+  auto sVal = getValueSym(s);
+  symbolicMemory[s] = pair<const Symbol*, Constraint*>(sVal, c);
+  return;
+}
+
 const Symbol* Engine::executeAdd(const Symbol* lhs, const Symbol* rhs) {
   auto resVal = mkSymbol(INT_32);
   auto resPtr = mkSymbol(PTR);
   auto lhsVal = getValueSym(lhs);
   auto rhsVal = getValueSym(rhs);
   auto addCon = mkEq(resVal, mkPlus(lhsVal, rhsVal));
-  symbolicMemory[resPtr] = pair<Symbol*, Constraint*>(resVal, addCon);
+  symbolicMemory[resPtr] = pair<const Symbol*, Constraint*>(resVal, addCon);
   return resPtr;
 }
 
@@ -112,6 +122,31 @@ const Symbol* Engine::executeMul(const Symbol* lhs, const Symbol* rhs) {
   auto subCon = mkEq(resVal, mkTimes(lhsVal, rhsVal));
   symbolicMemory[resPtr] = pair<Symbol*, Constraint*>(resVal, subCon);
   return resPtr;
+}
+
+const Symbol* Engine::allocateStack(SymbolType t) {
+  auto a = addSymbol(t);
+  auto b = mkSymbol(PTR);
+  auto bVal = mkSymbol(PTR);
+  auto bConstraint = mkEq(bVal, a);
+  symbolicMemory[b] = pair<Symbol*, Constraint*>(bVal, bConstraint);
+  return b;
+}
+
+void Engine::executeStore(const Symbol* val, const Symbol* locationPtr) {
+  auto v = getValueSym(val);
+  auto recLoc = deref(locationPtr);
+  auto recLocVal = getValueSym(recLoc);
+  setConstraint(recLoc, mkEq(recLocVal, v));
+  return;
+}
+
+const Symbol* Engine::executeLoad(const Symbol* locationPtr) {
+  auto resVal = addSymbol(INT_32);
+  auto loadVal = deref(locationPtr);
+  auto loadValSym = getValueSym(loadVal);
+  setConstraint(resVal, mkEq(getValueSym(resVal), loadValSym));
+  return resVal;
 }
 
 bool Engine::stateImplies(Constraint* c) {

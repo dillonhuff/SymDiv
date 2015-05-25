@@ -15,7 +15,7 @@ using namespace std;
 class Engine {
  protected:
   ConstraintSolver* solver;
-  map<const Symbol*, pair<Symbol*, Constraint*>> symbolicMemory;
+  map<const Symbol*, pair<const Symbol*, Constraint*>> symbolicMemory;
   vector<Constraint*> allConstraints;
   vector<Term*> allTerms;
   int nextSymId;
@@ -26,6 +26,10 @@ class Engine {
   Term* mkMinus(const Term* lhs, const Term* rhs);
   Term* mkTimes(const Term* lhs, const Term* rhs);
   Symbol* mkSymbol(SymbolType t);
+
+  const Symbol* deref(const Symbol* ptr);
+
+  void setConstraint(const Symbol* s, Constraint* c);
 
   const Symbol* executeAdd(const Symbol* lhs, const Symbol* rhs);
   const Symbol* executeSub(const Symbol* lhs, const Symbol* rhs);
@@ -38,9 +42,9 @@ class Engine {
   const Constraint* getConstraint(const Symbol* s) const;
   const Symbol* getValueSym(const Symbol* s) const;
   const Symbol* executeBinop(OpCode c, const Symbol* lhs, const Symbol* rhs);
-  const Symbol* allocateStack(SymbolType t) { return nullptr; }
-  void executeStore(const Symbol* val, const Symbol* location) { return; }
-  const Symbol* executeLoad(const Symbol* location) { return nullptr; }
+  const Symbol* allocateStack(SymbolType t);
+  void executeStore(const Symbol* val, const Symbol* locationPtr);
+  const Symbol* executeLoad(const Symbol* locationPtr);
 
   bool stateImplies(Constraint* c);
 };
