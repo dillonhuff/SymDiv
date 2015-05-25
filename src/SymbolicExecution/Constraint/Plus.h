@@ -9,6 +9,8 @@ class Plus : public BinaryFunction {
     : BinaryFunction::BinaryFunction(l, r) {
     kind = PLUS;
   }
+  
+  virtual bool isPlus() const { return true; }
 
   virtual bool operator==(const Term* other) const {
     return BinaryFunction::operator==(other);

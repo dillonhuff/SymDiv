@@ -24,7 +24,10 @@ class Term {
 
  public:
   virtual bool isSymbol() const { return false; }
+  virtual bool isPlus() const { return false; }
+  virtual bool isMinus() const { return false; }
   virtual bool isBinaryFunction() const { return false; }
+
   virtual bool operator==(const Term& other) const;
   virtual bool operator==(const Term* other) const;
 

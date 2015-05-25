@@ -76,6 +76,6 @@ void runEngineTests() {
   execAdd();
   execSub();
   execMul();
-  execMemops();
+//  execMemops();
   cout << "-----------------------------------------------------------------" << endl;
 }

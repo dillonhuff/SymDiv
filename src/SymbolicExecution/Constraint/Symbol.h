@@ -22,7 +22,7 @@ class Symbol : public Term {
   virtual bool isSymbol() const { return true; }
   virtual bool operator==(const Term* other) const;
   
-  virtual std::string toString() { return "$" + std::to_string((long long int) id); }
+  virtual std::string toString() const { return "$" + std::to_string((long long int) id); }
 };
 
 #endif

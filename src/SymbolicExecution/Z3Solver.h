@@ -3,9 +3,19 @@
 
 #include "SymbolicExecution/ConstraintSolver.h"
 
+#include "z3++.h"
+
+#include <vector>
+
+using namespace std;
+
 class Z3Solver : public ConstraintSolver {
- public:
-  virtual bool implies(vector<Constraint*> state, Constraint* c);
+protected:
+z3::expr toZ3Expr(z3::context* ctx, const Term* t);
+z3::expr toZ3Expr(z3::context* ctx, const Constraint* c);
+
+public:
+virtual bool constraintsImply(vector<Constraint*>* state, Constraint* c);
 };
 
 #endif

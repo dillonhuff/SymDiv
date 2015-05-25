@@ -8,6 +8,8 @@ class False : public Constraint {
   False() {
     kind = FALSE;
   }
+
+  virtual bool isFalse() const { return true; }
 };
 
 #endif

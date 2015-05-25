@@ -120,5 +120,5 @@ bool Engine::stateImplies(Constraint* c) {
     auto stateConstraint = entry.second.second;
     constraintState.push_back(stateConstraint);
   }
-  return solver->implies(&constraintState, c);
+  return solver->constraintsImply(&constraintState, c);
 }

@@ -20,6 +20,9 @@ class BinaryPredicate : public Constraint {
   virtual bool isBinaryPredicate() const { return true; }
   virtual bool operator==(const Constraint* other) const;
 
+  virtual const Term* getLhs() const { return lhs; }
+  virtual const Term* getRhs() const { return rhs; }
+
   virtual std::string toStrint() const {
     std::string res = "(";
     res += constraintKindToString(kind) + " ";

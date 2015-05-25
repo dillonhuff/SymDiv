@@ -9,7 +9,7 @@ using namespace std;
 
 class ConstraintSolver {
  public:
-  virtual bool implies(vector<Constraint*>* state, Constraint* c) { return false; }
+  virtual bool constraintsImply(vector<Constraint*>* state, Constraint* c) { return false; }
 };
 
 #endif

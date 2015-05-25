@@ -10,6 +10,8 @@ class Minus : public BinaryFunction {
     kind = MINUS;
   }
 
+  virtual bool isMinus() const { return true; }
+
   virtual bool operator==(const Term* other) const {
     return BinaryFunction::operator==(other); 
   }

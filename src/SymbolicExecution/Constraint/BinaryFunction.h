@@ -13,8 +13,10 @@ class BinaryFunction : public Term {
     : lhs(l), rhs(r) {}
 
   virtual bool isBinaryFunction() const { return true; }
-
   virtual bool operator==(const Term* other) const;
+
+  virtual const Term* getRhs() const { return rhs; }
+  virtual const Term* getLhs() const { return lhs; }
 };
 
 #endif

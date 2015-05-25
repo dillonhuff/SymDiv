@@ -8,6 +8,8 @@ class True : public Constraint {
   True() {
     kind = TRUE;
   }
+
+  virtual bool isTrue() const { return true; }
 };
 
 #endif
