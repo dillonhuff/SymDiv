@@ -10,9 +10,9 @@ class Minus : public BinaryFunction {
     kind = MINUS;
   }
 
-  virtual bool isMinus() const { return true; }
+  virtual bool isMinus() const override { return true; }
 
-  virtual bool operator==(const Term* other) const {
+  bool operator==(const Term* other) const override {
     return BinaryFunction::operator==(other); 
   }
 };

@@ -19,10 +19,10 @@ class Symbol : public Term {
   Symbol() { kind = SYMBOL; t = INT_32; id = -1; }
   Symbol(SymbolType st, int i) { t = st; id = i; }
 
-  virtual bool isSymbol() const { return true; }
-  virtual bool operator==(const Term* other) const;
+  bool isSymbol() const override { return true; }
+  bool operator==(const Term* other) const override;
   
-  virtual std::string toString() const { return "$" + std::to_string((long long int) id); }
+  std::string toString() const override { return "$" + std::to_string((long long int) id); }
 };
 
 #endif

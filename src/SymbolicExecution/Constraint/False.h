@@ -9,7 +9,7 @@ class False : public Constraint {
     kind = FALSE;
   }
 
-  virtual bool isFalse() const { return true; }
+  bool isFalse() const override { return true; }
 };
 
 #endif

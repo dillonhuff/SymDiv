@@ -66,8 +66,29 @@ void execMemops() {
   auto b = e.allocateStack(INT_32);
   e.executeStore(a, b);
   auto c = e.executeLoad(b);
-  auto aEqB = Eq(e.getValueSym(a), e.getValueSym(c));
-  testResult(e.stateImplies(&aEqB), "Loading store result");
+  auto aEqC = Eq(e.getValueSym(a), e.getValueSym(c));
+  testResult(e.stateImplies(&aEqC), "Loading store result");
+}
+
+void twoDifferentStoresNotEqual() {
+  Z3Solver solver;
+  Engine e(&solver);
+  auto a = e.addSymbol(INT_32);
+  auto b = e.addSymbol(INT_32);
+  auto c = e.allocateStack(INT_32);
+  auto d = e.allocateStack(INT_32);
+  e.executeStore(a, c);
+  e.executeStore(b, d);
+  auto aL = e.executeLoad(c);
+  auto bL = e.executeLoad(d);
+  auto blEqAl = Eq(e.getValueSym(aL), e.getValueSym(bL));
+  testResult(!e.stateImplies(&blEqAl), "Two different loads are not equal");
+}
+
+void loadStoreConstant() {
+  Z3Solver solver;
+  Engine e(&solver);
+  auto a = e.addConstant(12, INT_32);
 }
 
 void runEngineTests() {
@@ -77,5 +98,7 @@ void runEngineTests() {
   execSub();
   execMul();
   execMemops();
-  cout << "-----------------------------------------------------------------" << endl;
+  twoDifferentStoresNotEqual();
+  loadStoreConstant();
+  cout << "-----------------------------------------------------------------" << endl << endl;
 }

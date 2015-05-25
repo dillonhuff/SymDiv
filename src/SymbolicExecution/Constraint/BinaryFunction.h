@@ -12,11 +12,11 @@ class BinaryFunction : public Term {
   BinaryFunction(const Term* l, const Term* r)
     : lhs(l), rhs(r) {}
 
-  virtual bool isBinaryFunction() const { return true; }
-  virtual bool operator==(const Term* other) const;
+  bool isBinaryFunction() const override { return true; }
+  bool operator==(const Term* other) const override;
 
-  virtual const Term* getRhs() const { return rhs; }
-  virtual const Term* getLhs() const { return lhs; }
+  const Term* getRhs() const { return rhs; }
+  const Term* getLhs() const { return lhs; }
 };
 
 #endif
