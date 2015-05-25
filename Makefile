@@ -37,12 +37,10 @@ make_builddir:
 	@test -d $(BUILD_DIR) || mkdir $(BUILD_DIR)
 
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(Z3_FLAGS) $(LLVM_CXXFLAGS) $(CLANG_INCLUDES) \
-	$(CLANG_LIBS) $(LLVM_LDFLAGS) $^ -c -o $@
+	$(CXX) $(CXXFLAGS) $(Z3_FLAGS) $^ -c -o $@
 
 $(BUILD_DIR)/sym_exe_tests: $(SYM_EXE_OBJS)
-	$(CXX) $(CXXFLAGS) $(Z3_FLAGS) $(Z3_LIB_PATH) -I/$(LLVM_CXXFLAGS) $(CLANG_INCLUDES) $^ \
-	$(CLANG_LIBS) $(LLVM_LDFLAGS) -o $@
+	$(CXX) $(CXXFLAGS) $(Z3_FLAGS) $(Z3_LIB_PATH) $^ -o $@
 
 .PHONY: clean
 clean:
