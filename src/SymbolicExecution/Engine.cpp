@@ -1,3 +1,4 @@
+#include "SymbolicExecution/Constraint/ConstantInt32.h"
 #include "SymbolicExecution/Constraint/Eq.h"
 #include "SymbolicExecution/Constraint/Minus.h"
 #include "SymbolicExecution/Constraint/Plus.h"
@@ -32,6 +33,12 @@ Term* Engine::mkMinus(const Term* lhs, const Term* rhs) {
   return minus;
 }
 
+Term* Engine::mkConstantInt32(int val) {
+  auto constant = new ConstantInt32(val);
+  allTerms.push_back(constant);
+  return constant;
+}
+
 Term* Engine::mkTimes(const Term* lhs, const Term* rhs) {
   auto times = new Times(lhs, rhs);
   allTerms.push_back(times);
@@ -55,6 +62,14 @@ const Symbol* Engine::addSymbol(SymbolType t) {
   auto sVal = mkSymbol(t);
   auto sPtr = mkSymbol(PTR);
   symbolicMemory[sPtr] = pair<Symbol*, Constraint*>(sVal, mkTrue());
+  return sPtr;
+}
+
+const Symbol* Engine::addConstantInt32(int val) {
+  auto constVal = mkConstantInt32(val);
+  auto sVal = mkSymbol(INT_32);
+  auto sPtr = mkSymbol(PTR);
+  symbolicMemory[sPtr] = pair<Symbol*, Constraint*>(sVal, mkEq(sVal, constVal));
   return sPtr;
 }
 
@@ -84,8 +99,32 @@ const Symbol* Engine::executeBinop(OpCode c, const Symbol* lhs, const Symbol* rh
   }
 }
 
-const Symbol* Engine::deref(const Symbol* ptr) {
-  return ptr;
+const Term* Engine::extractAddrFromEq(const Eq* eq, const Symbol* ptr) {
+  if (eq->getRhs() == getValueSym(ptr) &&
+      eq->getLhs()->isSymbol()) {
+    return eq->getLhs();
+  } else if (eq->getLhs() == getValueSym(ptr)
+	     && eq->getRhs()->isSymbol()) {
+    return eq->getRhs();
+  } else {
+    throw;
+  }
+}
+
+const Symbol* Engine::extractAddrPointedToBy(const Eq* eq, const Symbol* ptr) {
+  const Term* pointedTo = extractAddrFromEq(eq, ptr);
+  auto addr = static_cast<const Symbol*>(pointedTo);
+  return addr;
+}
+
+const Symbol* Engine::addrPointedToBy(const Symbol* ptr) {
+  auto c = getConstraint(ptr);
+  if (c->isEq()) {
+    auto eq = static_cast<const Eq*>(c);
+    return extractAddrPointedToBy(eq, ptr);
+  } else {
+    throw;
+  }
 }
 
 void Engine::setConstraint(const Symbol* s, Constraint* c) {
@@ -135,7 +174,7 @@ const Symbol* Engine::allocateStack(SymbolType t) {
 
 void Engine::executeStore(const Symbol* val, const Symbol* locationPtr) {
   auto v = getValueSym(val);
-  auto recLoc = deref(locationPtr);
+  auto recLoc = addrPointedToBy(locationPtr);
   auto recLocVal = getValueSym(recLoc);
   setConstraint(recLoc, mkEq(recLocVal, v));
   return;
@@ -143,7 +182,7 @@ void Engine::executeStore(const Symbol* val, const Symbol* locationPtr) {
 
 const Symbol* Engine::executeLoad(const Symbol* locationPtr) {
   auto resVal = addSymbol(INT_32);
-  auto loadVal = deref(locationPtr);
+  auto loadVal = addrPointedToBy(locationPtr);
   auto loadValSym = getValueSym(loadVal);
   setConstraint(resVal, mkEq(getValueSym(resVal), loadValSym));
   return resVal;

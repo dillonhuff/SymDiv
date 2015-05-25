@@ -1,3 +1,4 @@
+#include "SymbolicExecution/Constraint/ConstantInt32.h"
 #include "SymbolicExecution/Constraint/Eq.h"
 #include "SymbolicExecution/Constraint/False.h"
 #include "SymbolicExecution/Constraint/Minus.h"
@@ -113,6 +114,26 @@ void identicalEqsEqual() {
   test(&eq1, &eq2);
 }
 
+void constantsEqual() {
+  ConstantInt32 c1(123);
+  ConstantInt32 c2(123);
+
+  Eq e1(&c1, &c2);
+  Eq e2(&c1, &c2);
+
+  test(&e1, &e2);
+}
+
+void differentConstantsNotEqual() {
+  ConstantInt32 c1(12);
+  ConstantInt32 c2(-9);
+
+  Eq e1(&c1, &c1);
+  Eq e2(&c2, &c1);
+
+  testNEQ(&e1, &e2);
+}
+
 void runConstraintTests() {
   cout << "--------------------- Starting Constraint Tests -----------------" << endl;
   trueEqualsTrue();
@@ -124,5 +145,7 @@ void runConstraintTests() {
   eqPlusAndEqMinusNotEqual_1();
   eqPlusAndEqMinusNotEqual_2();
   identicalEqsEqual();
+  constantsEqual();
+  differentConstantsNotEqual();
   cout << "-----------------------------------------------------------------" << endl << endl;
 }

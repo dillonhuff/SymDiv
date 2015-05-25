@@ -1,3 +1,4 @@
+#include "SymbolicExecution/Constraint/ConstantInt32.h"
 #include "SymbolicExecution/Constraint/Eq.h"
 #include "SymbolicExecution/Constraint/Minus.h"
 #include "SymbolicExecution/Constraint/Plus.h"
@@ -88,7 +89,24 @@ void twoDifferentStoresNotEqual() {
 void loadStoreConstant() {
   Z3Solver solver;
   Engine e(&solver);
-  auto a = e.addConstant(12, INT_32);
+  auto a = e.addConstantInt32(12);
+  auto b = e.allocateStack(INT_32);
+  e.executeStore(a, b);
+  auto c = e.executeLoad(b);
+  ConstantInt32 d(12);
+  auto cEqd = Eq(e.getValueSym(c), &d);
+  testResult(e.stateImplies(&cEqd), "Store load operation on integer constant");
+}
+
+void storeDoesntChangePtr() {
+  Z3Solver solver;
+  Engine e(&solver);
+  auto a = e.addConstantInt32(12);
+  auto b = e.allocateStack(INT_32);
+  e.executeStore(a, b);
+  auto c = e.executeLoad(b);
+  auto aEqB = Eq(e.getValueSym(a), e.getValueSym(b));
+  testResult(!e.stateImplies(&aEqB), "Store load operation doesn't change ptr value");
 }
 
 void runEngineTests() {
@@ -100,5 +118,6 @@ void runEngineTests() {
   execMemops();
   twoDifferentStoresNotEqual();
   loadStoreConstant();
+  storeDoesntChangePtr();
   cout << "-----------------------------------------------------------------" << endl << endl;
 }

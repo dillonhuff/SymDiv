@@ -1,3 +1,4 @@
+#include "SymbolicExecution/Constraint/ConstantInt32.h"
 #include "SymbolicExecution/Constraint/Eq.h"
 #include "SymbolicExecution/Constraint/Plus.h"
 #include "SymbolicExecution/Constraint/Symbol.h"
@@ -15,6 +16,9 @@ z3::expr Z3Solver::toZ3Expr(z3::context* ctx, const Term* t) {
   } else if (t->isPlus()) {
     const Plus* tP = static_cast<const Plus*>(t);
     return toZ3Expr(ctx, tP->getLhs()) + toZ3Expr(ctx, tP->getRhs());
+  } else if (t->isConstantInt32()) {
+    auto tC = static_cast<const ConstantInt32*>(t);
+    return ctx->bv_val(tC->getValue(), 32);
   } else {
     cout << "Error non symbol term" << endl;
     throw;

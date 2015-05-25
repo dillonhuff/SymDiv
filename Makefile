@@ -29,8 +29,12 @@ ALL_HEADERS += $(shell find $(TEST_DIR) -type f -name '*.h')
 
 # Build rules
 .PHONY: all
-all: make_builddir \
+all: set_z3_path \
+	make_builddir \
 	$(BUILD_DIR)/sym_exe_tests
+
+set_z3_path:
+	@export DYLD_LIBRARY_PATH="/Library/lib/"
 
 .PHONY: make_builddir
 make_builddir:

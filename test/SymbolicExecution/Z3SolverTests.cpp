@@ -1,3 +1,4 @@
+#include "SymbolicExecution/Constraint/ConstantInt32.h"
 #include "SymbolicExecution/Constraint/Eq.h"
 #include "SymbolicExecution/Constraint/False.h"
 #include "SymbolicExecution/Constraint/Plus.h"
@@ -61,11 +62,22 @@ void transitiveAdd() {
   testResult(s.constraintsImply(&st, &e3), "a + b = c + d ^ c + d = e + f -> a + b = e + f");
 }
 
+void twoConstantsEq() {
+  ConstantInt32 a(45);
+  Eq eq(&a, &a);
+
+  vector<Constraint*> st;
+
+  Z3Solver s;
+  testResult(s.constraintsImply(&st, &eq), "True -> 45 == 45");
+}
+
 void runZ3SolverTests() {
   cout << "--------------------- Z3 Solver Tests ---------------------" << endl;
   trueTest();
   trueImpliesFalse();
   aEqualsA();
   transitiveAdd();
+  twoConstantsEq();
   cout << "-----------------------------------------------------------" << endl;
 }

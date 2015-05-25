@@ -2,6 +2,7 @@
 #define ENGINE_H
 
 #include "SymbolicExecution/Constraint/Constraint.h"
+#include "SymbolicExecution/Constraint/Eq.h"
 #include "SymbolicExecution/Constraint/Symbol.h"
 #include "SymbolicExecution/Constraint/Term.h"
 #include "SymbolicExecution/ConstraintSolver.h"
@@ -25,9 +26,12 @@ class Engine {
   Term* mkPlus(const Term* lhs, const Term* rhs);
   Term* mkMinus(const Term* lhs, const Term* rhs);
   Term* mkTimes(const Term* lhs, const Term* rhs);
+  Term* mkConstantInt32(int val);
   Symbol* mkSymbol(SymbolType t);
 
-  const Symbol* deref(const Symbol* ptr);
+  const Term* extractAddrFromEq(const Eq* eq, const Symbol* ptr);
+  const Symbol* extractAddrPointedToBy(const Eq* eq, const Symbol* ptr);
+  const Symbol* addrPointedToBy(const Symbol* ptr);
 
   void setConstraint(const Symbol* s, Constraint* c);
 
@@ -39,6 +43,7 @@ class Engine {
   Engine(ConstraintSolver* s);
 
   const Symbol* addSymbol(SymbolType t);
+  const Symbol* addConstantInt32(int val);
   const Constraint* getConstraint(const Symbol* s) const;
   const Symbol* getValueSym(const Symbol* s) const;
   const Symbol* executeBinop(OpCode c, const Symbol* lhs, const Symbol* rhs);
