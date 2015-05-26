@@ -1,6 +1,8 @@
 #include "SymbolicExecution/Constraint/ConstantInt32.h"
+#include "SymbolicExecution/Constraint/Divide.h"
 #include "SymbolicExecution/Constraint/Eq.h"
 #include "SymbolicExecution/Constraint/False.h"
+#include "SymbolicExecution/Constraint/NEq.h"
 #include "SymbolicExecution/Constraint/Plus.h"
 #include "SymbolicExecution/Constraint/Symbol.h"
 #include "SymbolicExecution/Constraint/True.h"
@@ -27,7 +29,7 @@ void trueImpliesFalse() {
   st.push_back(&t);
   False f;
   Z3Solver s;
-  testResult(!s.constraintsImply(&st, &f), "true implies true");
+  testResult(!s.constraintsImply(&st, &f), "true does not imply false");
 }
 
 void aEqualsA() {
@@ -72,6 +74,42 @@ void twoConstantsEq() {
   testResult(s.constraintsImply(&st, &eq), "True -> 45 == 45");
 }
 
+void identicalDividesEq() {
+  ConstantInt32 a(23);
+  ConstantInt32 b(23);
+
+  Symbol c1(INT_32, 0);
+  Symbol c2(INT_32, 0);
+
+  Symbol c3(INT_32, 1);
+  Symbol c4(INT_32, 1);
+
+  Divide d1(&c1, &a);
+  Divide d2(&c2, &b);
+
+  Eq eq1(&c3, &d1);
+  Eq eq2(&c4, &d2);
+
+  vector<Constraint*> st;
+  st.push_back(&eq1);
+
+  Z3Solver s;
+  testResult(s.constraintsImply(&st, &eq2), "a == b / 23 -> a == b / 23");
+}
+
+void simpleNEq() {
+  Symbol a(INT_32, 0);
+  ConstantInt32 z(0);
+  
+  NEq aNonZero(&a, &z);
+
+  vector<Constraint*> st;
+  st.push_back(&aNonZero);
+
+  Z3Solver s;
+  testResult(s.constraintsImply(&st, &aNonZero), "a != 0 -> a != 0");
+}
+
 void runZ3SolverTests() {
   cout << "--------------------- Z3 Solver Tests ---------------------" << endl;
   trueTest();
@@ -79,5 +117,7 @@ void runZ3SolverTests() {
   aEqualsA();
   transitiveAdd();
   twoConstantsEq();
+  identicalDividesEq();
+  simpleNEq();
   cout << "-----------------------------------------------------------" << endl;
 }

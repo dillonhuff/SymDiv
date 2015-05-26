@@ -39,6 +39,8 @@ class Engine {
   const Symbol* executeSub(const Symbol* lhs, const Symbol* rhs);
   const Symbol* executeMul(const Symbol* lhs, const Symbol* rhs);
 
+  void getConstraintState(vector<Constraint*>* constraintState);
+
  public:
   Engine(ConstraintSolver* s);
 
@@ -52,6 +54,7 @@ class Engine {
   const Symbol* executeLoad(const Symbol* locationPtr);
 
   bool stateImplies(Constraint* c);
+  bool stateAllows(Constraint* c);
 };
 
 #endif

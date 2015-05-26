@@ -10,12 +10,15 @@
 using namespace std;
 
 class Z3Solver : public ConstraintSolver {
-protected:
-z3::expr toZ3Expr(z3::context* ctx, const Term* t);
-z3::expr toZ3Expr(z3::context* ctx, const Constraint* c);
+ protected:
+  z3::expr toZ3Expr(z3::context* ctx, const Term* t);
+  z3::expr toZ3Expr(z3::context* ctx, const Constraint* c);
+  z3::expr andConstraints(z3::context* ctx, const vector<Constraint*>* state);
+  bool checkSAT(z3::solver s);
 
-public:
-virtual bool constraintsImply(vector<Constraint*>* state, Constraint* c);
+ public:
+  bool constraintsImply(vector<Constraint*>* state, Constraint* c) override;
+  bool constraintsAllow(vector<Constraint*>* state, Constraint* c) override;
 };
 
 #endif

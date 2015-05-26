@@ -104,9 +104,27 @@ void storeDoesntChangePtr() {
   auto a = e.addConstantInt32(12);
   auto b = e.allocateStack(INT_32);
   e.executeStore(a, b);
-  auto c = e.executeLoad(b);
+  e.executeLoad(b);
   auto aEqB = Eq(e.getValueSym(a), e.getValueSym(b));
   testResult(!e.stateImplies(&aEqB), "Store load operation doesn't change ptr value");
+}
+
+void oneVarCouldBeZero() {
+  Z3Solver solver;
+  Engine e(&solver);
+  auto a = e.addSymbol(INT_32);
+  ConstantInt32 zero(0);
+  Eq aEqZero(e.getValueSym(a), &zero);
+  testResult(e.stateAllows(&aEqZero), "Just initialized symbol could be zero");
+}
+
+void nonZeroConstantCannotBeZero() {
+  Z3Solver solver;
+  Engine e(&solver);
+  auto a = e.addConstantInt32(12);
+  ConstantInt32 zero(0);
+  Eq aEqZero(e.getValueSym(a), &zero);
+  testResult(!e.stateAllows(&aEqZero), "Nonzero constant cannot be zero");
 }
 
 void runEngineTests() {
@@ -119,5 +137,7 @@ void runEngineTests() {
   twoDifferentStoresNotEqual();
   loadStoreConstant();
   storeDoesntChangePtr();
+  oneVarCouldBeZero();  
+  nonZeroConstantCannotBeZero();
   cout << "-----------------------------------------------------------------" << endl << endl;
 }

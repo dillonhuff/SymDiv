@@ -1,5 +1,7 @@
 #include "SymbolicExecution/Constraint/ConstantInt32.h"
+#include "SymbolicExecution/Constraint/Divide.h"
 #include "SymbolicExecution/Constraint/Eq.h"
+#include "SymbolicExecution/Constraint/NEq.h"
 #include "SymbolicExecution/Constraint/Plus.h"
 #include "SymbolicExecution/Constraint/Symbol.h"
 #include "SymbolicExecution/Z3Solver.h"
@@ -16,11 +18,14 @@ z3::expr Z3Solver::toZ3Expr(z3::context* ctx, const Term* t) {
   } else if (t->isPlus()) {
     const Plus* tP = static_cast<const Plus*>(t);
     return toZ3Expr(ctx, tP->getLhs()) + toZ3Expr(ctx, tP->getRhs());
+  } else if (t->isDivide()) {
+    auto tD = static_cast<const Divide*>(t);
+    return toZ3Expr(ctx, tD->getLhs()) / toZ3Expr(ctx, tD->getRhs());
   } else if (t->isConstantInt32()) {
     auto tC = static_cast<const ConstantInt32*>(t);
     return ctx->bv_val(tC->getValue(), 32);
   } else {
-    cout << "Error non symbol term" << endl;
+    cout << "Error unsupported term" << endl;
     throw;
   }
 }
@@ -33,28 +38,51 @@ z3::expr Z3Solver::toZ3Expr(z3::context* ctx, const Constraint* c) {
   } else if (c->isEq()) {
     const Eq* cEq = static_cast<const Eq*>(c);
     return toZ3Expr(ctx, cEq->getLhs()) == toZ3Expr(ctx, cEq->getRhs());
-  } else {
+  } else if (c->isNEq()) {
+    auto cNEq = static_cast<const NEq*>(c);
+    return toZ3Expr(ctx, cNEq->getLhs()) == toZ3Expr(ctx, cNEq->getRhs());
+  }else {
+    throw;
+  }
+}
+
+z3::expr Z3Solver::andConstraints(z3::context* ctx, const vector<Constraint*>* state) {
+  z3::expr stateExpr = ctx->bool_val(true);
+  for (auto st : *state) {
+    stateExpr = stateExpr && toZ3Expr(ctx, st);
+  }
+  return stateExpr;
+}
+
+bool Z3Solver::checkSAT(z3::solver s) {
+  switch (s.check()) {
+  case(z3::unsat):
+    return false;
+  case(z3::sat):
+    return true;
+  default:
     throw;
   }
 }
 
 bool Z3Solver::constraintsImply(vector<Constraint*>* state, Constraint* c) {
   z3::context ctx;
-  z3::expr stateExpr = ctx.bool_val(true);
-  for (auto st : *state) {
-    stateExpr = stateExpr && toZ3Expr(&ctx, st);
-  }
+  z3::expr stateExpr = andConstraints(&ctx, state);
   z3::expr conclusion = toZ3Expr(&ctx, c);
   stateExpr = implies(stateExpr, conclusion);
   z3::solver s(ctx);
   s.add(!stateExpr);
-  switch (s.check()) {
-  case(z3::unsat):
-    return true;
-  case(z3::sat):
-    return false;
-  default:
-    throw;
-  }
-  return true;
+  return !checkSAT(s);
+}
+
+bool Z3Solver::constraintsAllow(vector<Constraint*>* state, Constraint* c) {
+  z3::context ctx;
+  z3::expr stateExpr = andConstraints(&ctx, state);
+  z3::expr conclusion = toZ3Expr(&ctx, c);
+  stateExpr = stateExpr && conclusion;
+  cout << "Expression to allow" << endl;
+  cout << stateExpr << endl;
+  z3::solver s(ctx);
+  s.add(stateExpr);
+  return checkSAT(s);
 }

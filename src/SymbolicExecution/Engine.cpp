@@ -188,11 +188,21 @@ const Symbol* Engine::executeLoad(const Symbol* locationPtr) {
   return resVal;
 }
 
-bool Engine::stateImplies(Constraint* c) {
-  vector<Constraint*> constraintState;
+void Engine::getConstraintState(vector<Constraint*>* constraintState) {
   for (auto entry : symbolicMemory) {
     auto stateConstraint = entry.second.second;
-    constraintState.push_back(stateConstraint);
+    constraintState->push_back(stateConstraint);
   }
+}
+
+bool Engine::stateImplies(Constraint* c) {
+  vector<Constraint*> constraintState;
+  getConstraintState(&constraintState);
   return solver->constraintsImply(&constraintState, c);
+}
+
+bool Engine::stateAllows(Constraint* c) {
+  vector<Constraint*> constraintState;
+  getConstraintState(&constraintState);
+  return solver->constraintsAllow(&constraintState, c);
 }

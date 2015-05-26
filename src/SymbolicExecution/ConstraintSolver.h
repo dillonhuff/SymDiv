@@ -10,6 +10,7 @@ using namespace std;
 class ConstraintSolver {
  public:
   virtual bool constraintsImply(vector<Constraint*>* state, Constraint* c) { return false; }
+  virtual bool constraintsAllow(vector<Constraint*>* state, Constraint* c) { return false; }
 };
 
 #endif
