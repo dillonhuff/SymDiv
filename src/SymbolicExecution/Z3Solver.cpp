@@ -41,7 +41,7 @@ z3::expr Z3Solver::toZ3Expr(z3::context* ctx, const Constraint* c) {
   } else if (c->isNEq()) {
     auto cNEq = static_cast<const NEq*>(c);
     return toZ3Expr(ctx, cNEq->getLhs()) == toZ3Expr(ctx, cNEq->getRhs());
-  }else {
+  } else {
     throw;
   }
 }
