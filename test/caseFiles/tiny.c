@@ -1,7 +1,12 @@
-int test(int argc) {
+int test_1(int argc) {
   return argc;
 }
 
-double ptr_ref(double* xs, int n) {
-  return xs[n];
+int test_2(int a, int b) {
+  return a / b;
+}
+
+int test_3(int a, int b) {
+  int c = a + b;
+  return 1 / c;
 }

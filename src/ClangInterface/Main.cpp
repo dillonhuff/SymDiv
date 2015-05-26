@@ -1,3 +1,5 @@
+#include "ClangInterface/FunctionChecking.h"
+
 #include "clang/CodeGen/CodeGenAction.h"
 #include "clang/Basic/DiagnosticOptions.h"
 #include "clang/Driver/Compilation.h"
@@ -96,17 +98,17 @@ int main(int argc, const char **argv, char * const *envp) {
   if (!Clang.ExecuteAction(*Act))
     return 1;
 
-  int Res = 255;
   if (std::unique_ptr<llvm::Module> Module = Act->takeModule()) {
     for (auto& f : Module.get()->getFunctionList()) {
-      for (auto& bb : f.getBasicBlockList()) {
+      checkFunction(&f);
+      /*      for (auto& bb : f.getBasicBlockList()) {
 	for (auto& instr : bb) {
 	  printf("%s\n", instr.getOpcodeName());
 	}
-      }
+	}*/
     }
   }
 
   llvm::llvm_shutdown();
-  return Res;
+  return 0;
 }

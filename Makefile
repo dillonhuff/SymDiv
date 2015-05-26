@@ -44,7 +44,6 @@ CLANG_LIBS := \
 	-lclangTooling \
 	-Wl,
 
-
 # Z3 settings
 Z3_PATH := /Users/dillon/cppWorkspace/z3
 Z3_API_PATH := $(Z3_PATH)/src/api
@@ -101,7 +100,7 @@ $(SYM_EXE_TEST_DIR)/%.o: $(SYM_EXE_TEST_DIR)/%.cpp
 $(CLANG_INTERFACE_SRC_DIR)/%.o: $(CLANG_INTERFACE_SRC_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $(Z3_FLAGS) $(LLVM_CXXFLAGS) $(CLANG_INCLUDES) $^ -c -o $@
 
-$(BUILD_DIR)/clang_interface: $(CLANG_INTERFACE_OBJS) # $(SYM_EXE_OBJS)
+$(BUILD_DIR)/clang_interface: $(CLANG_INTERFACE_OBJS) $(SYM_EXE_OBJS)
 	$(CXX) $(CXXFLAGS) $(Z3_FLAGS) $(Z3_LIB_PATH) $(LLVM_CXXFLAGS) $(CLANG_INCLUDES) $^ $(CLANG_LIBS) $(LLVM_LDFLAGS) -o $@
 
 $(BUILD_DIR)/sym_exe_tests: $(SYM_EXE_TEST_OBJS)

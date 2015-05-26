@@ -17,6 +17,8 @@ class Z3Solver : public ConstraintSolver {
   bool checkSAT(z3::solver s);
 
  public:
+  //  virtual ~Z3Solver() { return; }
+
   bool constraintsImply(vector<Constraint*>* state, Constraint* c) override;
   bool constraintsAllow(vector<Constraint*>* state, Constraint* c) override;
 };
