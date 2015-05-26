@@ -10,6 +10,7 @@ class True : public Constraint {
   }
 
   virtual bool isTrue() const { return true; }
+  std::string toString() const override { return "true"; }
 };
 
 #endif

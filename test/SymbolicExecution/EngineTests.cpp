@@ -8,6 +8,7 @@
 #include "SymbolicExecution/Constraint/True.h"
 #include "SymbolicExecution/Engine.h"
 #include "SymbolicExecution/EngineTests.h"
+#include "SymbolicExecution/ExpressionFactory.h"
 #include "SymbolicExecution/TestUtils.h"
 #include "SymbolicExecution/Z3Solver.h"
 
@@ -17,7 +18,8 @@ using namespace std;
 
 void initializeEngine() {
   Z3Solver solver;
-  Engine e(&solver);
+  ExpressionFactory f;
+  Engine e(&solver, &f);
   auto s = e.addSymbol(INT_32);
   auto actual = e.getConstraint(s);
   True expected;
@@ -26,7 +28,8 @@ void initializeEngine() {
 
 void execAdd() {
   Z3Solver solver;
-  Engine e(&solver);
+  ExpressionFactory f;
+  Engine e(&solver, &f);
   auto lhs = e.addSymbol(INT_32);
   auto rhs = e.addSymbol(INT_32);
   auto res = e.executeBinop(ADD, lhs, rhs);
@@ -38,7 +41,8 @@ void execAdd() {
 
 void execSub() {
   Z3Solver solver;
-  Engine e(&solver);
+  ExpressionFactory f;
+  Engine e(&solver, &f);
   auto lhs = e.addSymbol(INT_32);
   auto rhs = e.addSymbol(INT_32);
   auto res = e.executeBinop(SUB, lhs, rhs);
@@ -50,7 +54,8 @@ void execSub() {
 
 void execMul() {
   Z3Solver solver;
-  Engine e(&solver);
+  ExpressionFactory f;
+  Engine e(&solver, &f);
   auto lhs = e.addSymbol(INT_32);
   auto rhs = e.addSymbol(INT_32);
   auto res = e.executeBinop(MUL, lhs, rhs);
@@ -62,7 +67,8 @@ void execMul() {
 
 void execMemops() {
   Z3Solver solver;
-  Engine e(&solver);
+  ExpressionFactory f;
+  Engine e(&solver, &f);
   auto a = e.addSymbol(INT_32);
   auto b = e.allocateStack(INT_32);
   e.executeStore(a, b);
@@ -73,7 +79,8 @@ void execMemops() {
 
 void twoDifferentStoresNotEqual() {
   Z3Solver solver;
-  Engine e(&solver);
+  ExpressionFactory f;
+  Engine e(&solver, &f);
   auto a = e.addSymbol(INT_32);
   auto b = e.addSymbol(INT_32);
   auto c = e.allocateStack(INT_32);
@@ -88,7 +95,8 @@ void twoDifferentStoresNotEqual() {
 
 void loadStoreConstant() {
   Z3Solver solver;
-  Engine e(&solver);
+  ExpressionFactory f;
+  Engine e(&solver, &f);
   auto a = e.addConstantInt32(12);
   auto b = e.allocateStack(INT_32);
   e.executeStore(a, b);
@@ -100,7 +108,8 @@ void loadStoreConstant() {
 
 void storeDoesntChangePtr() {
   Z3Solver solver;
-  Engine e(&solver);
+  ExpressionFactory f;
+  Engine e(&solver, &f);
   auto a = e.addConstantInt32(12);
   auto b = e.allocateStack(INT_32);
   e.executeStore(a, b);
@@ -111,7 +120,9 @@ void storeDoesntChangePtr() {
 
 void oneVarCouldBeZero() {
   Z3Solver solver;
-  Engine e(&solver);
+  ExpressionFactory f;
+  Engine e(&solver, &f);
+
   auto a = e.addSymbol(INT_32);
   ConstantInt32 zero(0);
   Eq aEqZero(e.getValueSym(a), &zero);
@@ -120,7 +131,9 @@ void oneVarCouldBeZero() {
 
 void nonZeroConstantCannotBeZero() {
   Z3Solver solver;
-  Engine e(&solver);
+  ExpressionFactory f;
+  Engine e(&solver, &f);
+
   auto a = e.addConstantInt32(12);
   ConstantInt32 zero(0);
   Eq aEqZero(e.getValueSym(a), &zero);
@@ -129,7 +142,9 @@ void nonZeroConstantCannotBeZero() {
 
 void loadsAndStoresDontChangeConstantValues() {
   Z3Solver solver;
-  Engine e(&solver);
+  ExpressionFactory f;
+  Engine e(&solver, &f);
+
   auto a = e.addConstantInt32(12);
   auto b = e.allocateStack(INT_32);
   e.executeStore(a, b);
@@ -141,7 +156,9 @@ void loadsAndStoresDontChangeConstantValues() {
 
 void divideBySymbolCouldCauseError() {
   Z3Solver solver;
-  Engine e(&solver);
+  ExpressionFactory f;
+  Engine e(&solver, &f);
+
   auto a = e.addSymbol(INT_32);
   auto b = e.addSymbol(INT_32);
   auto divRes = e.executeDiv(a, b);
@@ -150,7 +167,9 @@ void divideBySymbolCouldCauseError() {
 
 void divideByNonZeroConstantCannotCauseError() {
   Z3Solver solver;
-  Engine e(&solver);
+  ExpressionFactory f;
+  Engine e(&solver, &f);
+
   auto a = e.addSymbol(INT_32);
   auto b = e.addConstantInt32(4);
   auto divRes = e.executeDiv(a, b);

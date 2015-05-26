@@ -101,11 +101,6 @@ int main(int argc, const char **argv, char * const *envp) {
   if (std::unique_ptr<llvm::Module> Module = Act->takeModule()) {
     for (auto& f : Module.get()->getFunctionList()) {
       checkFunction(&f);
-      /*      for (auto& bb : f.getBasicBlockList()) {
-	for (auto& instr : bb) {
-	  printf("%s\n", instr.getOpcodeName());
-	}
-	}*/
     }
   }
 

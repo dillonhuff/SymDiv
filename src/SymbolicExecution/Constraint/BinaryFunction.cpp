@@ -7,3 +7,13 @@ bool BinaryFunction::operator==(const Term* other) const {
   }
   return false;
 }
+
+std::string BinaryFunction::toString() const {
+  std::string res = "(";
+  res += termKindToString(kind) + " ";
+  res += lhs->toString() + " ";
+  res += rhs->toString();
+  res += ")";
+  return res;
+}
+

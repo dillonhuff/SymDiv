@@ -6,6 +6,7 @@
 #include "SymbolicExecution/Constraint/Symbol.h"
 #include "SymbolicExecution/Constraint/Term.h"
 #include "SymbolicExecution/ConstraintSolver.h"
+#include "SymbolicExecution/ExpressionFactory.h"
 #include "SymbolicExecution/OperationResult.h"
 
 #include <map>
@@ -17,18 +18,8 @@ using namespace std;
 class Engine {
  protected:
   ConstraintSolver* solver;
+  ExpressionFactory* f;
   map<const Symbol*, pair<const Symbol*, Constraint*>> symbolicMemory;
-  vector<Constraint*> allConstraints;
-  vector<Term*> allTerms;
-  int nextSymId;
-
-  Constraint* mkTrue();
-  Constraint* mkEq(const Term* lhs, const Term* rhs);
-  Term* mkPlus(const Term* lhs, const Term* rhs);
-  Term* mkMinus(const Term* lhs, const Term* rhs);
-  Term* mkTimes(const Term* lhs, const Term* rhs);
-  Term* mkConstantInt32(int val);
-  Symbol* mkSymbol(SymbolType t);
 
   const Term* extractAddrFromEq(const Eq* eq, const Symbol* ptr);
   const Symbol* extractAddrPointedToBy(const Eq* eq, const Symbol* ptr);
@@ -43,7 +34,7 @@ class Engine {
   void getConstraintState(vector<Constraint*>* constraintState);
 
  public:
-  Engine(ConstraintSolver* s);
+  Engine(ConstraintSolver* s, ExpressionFactory* factory);
 
   const Symbol* addSymbol(SymbolType t);
   const Symbol* addConstantInt32(int val);
@@ -57,6 +48,8 @@ class Engine {
 
   bool stateImplies(Constraint* c);
   bool stateAllows(Constraint* c);
+
+  std::string toString() const;
 };
 
 #endif

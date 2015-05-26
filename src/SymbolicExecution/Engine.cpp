@@ -10,66 +10,24 @@
 
 using namespace std;
 
-Engine::Engine(ConstraintSolver* s) {
-  nextSymId = 0;
+Engine::Engine(ConstraintSolver* s, ExpressionFactory* factory) {
   solver = s;
+  f = factory;
 }
 
-Constraint* Engine::mkEq(const Term* lhs, const Term* rhs) {
-  auto eq = new Eq(lhs, rhs);
-  allConstraints.push_back(eq);
-  return eq;
-}
-
-Term* Engine::mkPlus(const Term* lhs, const Term* rhs) {
-  auto plus = new Plus(lhs, rhs);
-  allTerms.push_back(plus);
-  return plus;
-}
-
-Term* Engine::mkMinus(const Term* lhs, const Term* rhs) {
-  auto minus = new Minus(lhs, rhs);
-  allTerms.push_back(minus);
-  return minus;
-}
-
-Term* Engine::mkConstantInt32(int val) {
-  auto constant = new ConstantInt32(val);
-  allTerms.push_back(constant);
-  return constant;
-}
-
-Term* Engine::mkTimes(const Term* lhs, const Term* rhs) {
-  auto times = new Times(lhs, rhs);
-  allTerms.push_back(times);
-  return times;
-}
-
-Symbol* Engine::mkSymbol(SymbolType t) {
-  auto s = new Symbol(t, nextSymId);
-  nextSymId++;
-  allTerms.push_back(s);
-  return s;
-}
-
-Constraint* Engine::mkTrue() {
-  auto t = new True();
-  allConstraints.push_back(t);
-  return t;
-}
 
 const Symbol* Engine::addSymbol(SymbolType t) {
-  auto sVal = mkSymbol(t);
-  auto sPtr = mkSymbol(PTR);
-  symbolicMemory[sPtr] = pair<Symbol*, Constraint*>(sVal, mkTrue());
+  auto sVal = f->mkSymbol(t);
+  auto sPtr = f->mkSymbol(PTR);
+  symbolicMemory[sPtr] = pair<Symbol*, Constraint*>(sVal, f->mkTrue());
   return sPtr;
 }
 
 const Symbol* Engine::addConstantInt32(int val) {
-  auto constVal = mkConstantInt32(val);
-  auto sVal = mkSymbol(INT_32);
-  auto sPtr = mkSymbol(PTR);
-  symbolicMemory[sPtr] = pair<Symbol*, Constraint*>(sVal, mkEq(sVal, constVal));
+  auto constVal = f->mkConstantInt32(val);
+  auto sVal = f->mkSymbol(INT_32);
+  auto sPtr = f->mkSymbol(PTR);
+  symbolicMemory[sPtr] = pair<Symbol*, Constraint*>(sVal, f->mkEq(sVal, constVal));
   return sPtr;
 }
 
@@ -134,40 +92,40 @@ void Engine::setConstraint(const Symbol* s, Constraint* c) {
 }
 
 const Symbol* Engine::executeAdd(const Symbol* lhs, const Symbol* rhs) {
-  auto resVal = mkSymbol(INT_32);
-  auto resPtr = mkSymbol(PTR);
+  auto resVal = f->mkSymbol(INT_32);
+  auto resPtr = f->mkSymbol(PTR);
   auto lhsVal = getValueSym(lhs);
   auto rhsVal = getValueSym(rhs);
-  auto addCon = mkEq(resVal, mkPlus(lhsVal, rhsVal));
+  auto addCon = f->mkEq(resVal, f->mkPlus(lhsVal, rhsVal));
   symbolicMemory[resPtr] = pair<const Symbol*, Constraint*>(resVal, addCon);
   return resPtr;
 }
 
 const Symbol* Engine::executeSub(const Symbol* lhs, const Symbol* rhs) {
-  auto resVal = mkSymbol(INT_32);
-  auto resPtr = mkSymbol(PTR);
+  auto resVal = f->mkSymbol(INT_32);
+  auto resPtr = f->mkSymbol(PTR);
   auto lhsVal = getValueSym(lhs);
   auto rhsVal = getValueSym(rhs);
-  auto subCon = mkEq(resVal, mkMinus(lhsVal, rhsVal));
+  auto subCon = f->mkEq(resVal, f->mkMinus(lhsVal, rhsVal));
   symbolicMemory[resPtr] = pair<Symbol*, Constraint*>(resVal, subCon);
   return resPtr;
 }
 
 const Symbol* Engine::executeMul(const Symbol* lhs, const Symbol* rhs) {
-  auto resVal = mkSymbol(INT_32);
-  auto resPtr = mkSymbol(PTR);
+  auto resVal = f->mkSymbol(INT_32);
+  auto resPtr = f->mkSymbol(PTR);
   auto lhsVal = getValueSym(lhs);
   auto rhsVal = getValueSym(rhs);
-  auto subCon = mkEq(resVal, mkTimes(lhsVal, rhsVal));
+  auto subCon = f->mkEq(resVal, f->mkTimes(lhsVal, rhsVal));
   symbolicMemory[resPtr] = pair<Symbol*, Constraint*>(resVal, subCon);
   return resPtr;
 }
 
 const Symbol* Engine::allocateStack(SymbolType t) {
   auto a = addSymbol(t);
-  auto b = mkSymbol(PTR);
-  auto bVal = mkSymbol(PTR);
-  auto bConstraint = mkEq(bVal, a);
+  auto b = f->mkSymbol(PTR);
+  auto bVal = f->mkSymbol(PTR);
+  auto bConstraint = f->mkEq(bVal, a);
   symbolicMemory[b] = pair<Symbol*, Constraint*>(bVal, bConstraint);
   return b;
 }
@@ -176,7 +134,7 @@ void Engine::executeStore(const Symbol* val, const Symbol* locationPtr) {
   auto v = getValueSym(val);
   auto recLoc = addrPointedToBy(locationPtr);
   auto recLocVal = getValueSym(recLoc);
-  setConstraint(recLoc, mkEq(recLocVal, v));
+  setConstraint(recLoc, f->mkEq(recLocVal, v));
   return;
 }
 
@@ -184,7 +142,7 @@ const Symbol* Engine::executeLoad(const Symbol* locationPtr) {
   auto resVal = addSymbol(INT_32);
   auto loadVal = addrPointedToBy(locationPtr);
   auto loadValSym = getValueSym(loadVal);
-  setConstraint(resVal, mkEq(getValueSym(resVal), loadValSym));
+  setConstraint(resVal, f->mkEq(getValueSym(resVal), loadValSym));
   return resVal;
 }
 
@@ -217,4 +175,14 @@ bool Engine::stateAllows(Constraint* c) {
   vector<Constraint*> constraintState;
   getConstraintState(&constraintState);
   return solver->constraintsAllow(&constraintState, c);
+}
+
+std::string Engine::toString() const {
+  std::string out = "";
+  for (auto entry : symbolicMemory) {
+    out += entry.first->toString();
+    out += "\t->\t(" + entry.second.first->toString();
+    out += + ", " + entry.second.second->toString() + ")\n";
+  }
+  return out;
 }

@@ -23,11 +23,11 @@ class BinaryPredicate : public Constraint {
   virtual const Term* getLhs() const { return lhs; }
   virtual const Term* getRhs() const { return rhs; }
 
-  virtual std::string toStrint() const {
+  virtual std::string toString() const override {
     std::string res = "(";
     res += constraintKindToString(kind) + " ";
     res += lhs->toString() + " ";
-    res += rhs->toString() + " ";
+    res += rhs->toString();
     res += ")";
     return res;
   }

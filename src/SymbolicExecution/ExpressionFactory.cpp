@@ -1,0 +1,59 @@
+#include "SymbolicExecution/Constraint/ConstantInt32.h"
+#include "SymbolicExecution/Constraint/Eq.h"
+#include "SymbolicExecution/Constraint/Minus.h"
+#include "SymbolicExecution/Constraint/Plus.h"
+#include "SymbolicExecution/Constraint/Symbol.h"
+#include "SymbolicExecution/Constraint/Times.h"
+#include "SymbolicExecution/Constraint/True.h"
+#include "SymbolicExecution/ExpressionFactory.h"
+
+#include <vector>
+
+using namespace std;
+
+ExpressionFactory::ExpressionFactory() {
+  nextSymId = 0;
+}
+
+Constraint* ExpressionFactory::mkEq(const Term* lhs, const Term* rhs) {
+  auto eq = new Eq(lhs, rhs);
+  allConstraints.push_back(eq);
+  return eq;
+}
+
+Term* ExpressionFactory::mkPlus(const Term* lhs, const Term* rhs) {
+  auto plus = new Plus(lhs, rhs);
+  allTerms.push_back(plus);
+  return plus;
+}
+
+Term* ExpressionFactory::mkMinus(const Term* lhs, const Term* rhs) {
+  auto minus = new Minus(lhs, rhs);
+  allTerms.push_back(minus);
+  return minus;
+}
+
+Term* ExpressionFactory::mkConstantInt32(int val) {
+  auto constant = new ConstantInt32(val);
+  allTerms.push_back(constant);
+  return constant;
+}
+
+Term* ExpressionFactory::mkTimes(const Term* lhs, const Term* rhs) {
+  auto times = new Times(lhs, rhs);
+  allTerms.push_back(times);
+  return times;
+}
+
+Symbol* ExpressionFactory::mkSymbol(SymbolType t) {
+  auto s = new Symbol(t, nextSymId);
+  nextSymId++;
+  allTerms.push_back(s);
+  return s;
+}
+
+Constraint* ExpressionFactory::mkTrue() {
+  auto t = new True();
+  allConstraints.push_back(t);
+  return t;
+}

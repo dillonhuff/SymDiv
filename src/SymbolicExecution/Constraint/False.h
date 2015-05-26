@@ -10,6 +10,7 @@ class False : public Constraint {
   }
 
   bool isFalse() const override { return true; }
+  std::string toString() const override { return "false"; }
 };
 
 #endif

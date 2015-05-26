@@ -9,14 +9,16 @@ class BinaryFunction : public Term {
   const Term* rhs;
 
  public:
-  BinaryFunction(const Term* l, const Term* r)
-    : lhs(l), rhs(r) {}
+ BinaryFunction(const Term* l, const Term* r)
+   : lhs(l), rhs(r) {}
 
   bool isBinaryFunction() const override { return true; }
   bool operator==(const Term* other) const override;
 
   const Term* getRhs() const { return rhs; }
   const Term* getLhs() const { return lhs; }
+
+  std::string toString() const override;
 };
 
 #endif

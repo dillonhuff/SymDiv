@@ -19,6 +19,8 @@ enum TermKind {
   DIVIDE
 };
 
+std::string termKindToString(TermKind k);
+
 class Term {
  protected:
   TermKind kind;

@@ -1,6 +1,7 @@
 #include "ClangInterface/FunctionChecking.h"
 #include "SymbolicExecution/Constraint/Symbol.h"
 #include "SymbolicExecution/Engine.h"
+#include "SymbolicExecution/ExpressionFactory.h"
 #include "SymbolicExecution/Z3Solver.h"
 
 #include "llvm/Support/raw_ostream.h"
@@ -74,8 +75,9 @@ bool executeInstruction(llvm::Instruction* instr, llvm::Function* f, Engine* e, 
   return true;
 }
 
-void reportDivZero(llvm::Instruction* instr) {
+void reportDivZero(llvm::Instruction* instr, Engine* e) {
   llvm::errs() << "Error found div by zero\n";
+  llvm::errs() << e->toString() << "\n";
 }
 
 void executeBody(llvm::Function* f, Engine* e, map<llvm::Value*, const Symbol*>* valSyms) {
@@ -83,7 +85,7 @@ void executeBody(llvm::Function* f, Engine* e, map<llvm::Value*, const Symbol*>*
     for (auto& instr : bb) {
       bool foundError = executeInstruction(&instr, f, e, valSyms);
       if (foundError) {
-	reportDivZero(&instr);
+	reportDivZero(&instr, e);
 	return;
       }
     }
@@ -93,7 +95,8 @@ void executeBody(llvm::Function* f, Engine* e, map<llvm::Value*, const Symbol*>*
 
 void checkFunction(llvm::Function* f) {
   Z3Solver solver;
-  Engine e(&solver);
+  ExpressionFactory fac;
+  Engine e(&solver, &fac);
   map<llvm::Value*, const Symbol*> valSyms;
   addArguments(f, &e, &valSyms);
   executeBody(f, &e, &valSyms);

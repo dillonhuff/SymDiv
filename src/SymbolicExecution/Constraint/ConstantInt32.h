@@ -15,6 +15,8 @@ class ConstantInt32 : public Term {
 
   bool operator==(const Term* other) const override;
   bool isConstantInt32() const override { return true; }
+
+  std::string toString() const override { return std::to_string((long long int) value); }
 };
 
 #endif
