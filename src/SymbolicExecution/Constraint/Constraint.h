@@ -4,6 +4,7 @@
 #include <string>
 
 enum ConstraintKind {
+  NEQ,
   EQ,
   TRUE,
   FALSE
@@ -23,6 +24,7 @@ class Constraint {
   virtual bool isTrue() const { return false; }
   virtual bool isFalse() const { return false; }
   virtual bool isEq() const { return false; }
+  virtual bool isNEq() const { return false; }
 
   virtual std::string toString() const { throw; }
 };
