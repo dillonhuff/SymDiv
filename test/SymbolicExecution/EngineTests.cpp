@@ -127,6 +127,36 @@ void nonZeroConstantCannotBeZero() {
   testResult(!e.stateAllows(&aEqZero), "Nonzero constant cannot be zero");
 }
 
+void loadsAndStoresDontChangeConstantValues() {
+  Z3Solver solver;
+  Engine e(&solver);
+  auto a = e.addConstantInt32(12);
+  auto b = e.allocateStack(INT_32);
+  e.executeStore(a, b);
+  auto c = e.executeLoad(b);
+  ConstantInt32 nine(9);
+  Eq cEqNine(e.getValueSym(c), &nine);
+  testResult(!e.stateAllows(&cEqNine), "Loading and storing cannot change a constants value");
+}
+
+void divideBySymbolCouldCauseError() {
+  Z3Solver solver;
+  Engine e(&solver);
+  auto a = e.addSymbol(INT_32);
+  auto b = e.addSymbol(INT_32);
+  auto divRes = e.executeDiv(a, b);
+  testResult(divRes.errorIsPossible(), "Dividing by a symbol can cause and error");
+}
+
+void divideByNonZeroConstantCannotCauseError() {
+  Z3Solver solver;
+  Engine e(&solver);
+  auto a = e.addSymbol(INT_32);
+  auto b = e.addConstantInt32(4);
+  auto divRes = e.executeDiv(a, b);
+  testResult(!divRes.errorIsPossible(), "Dividing by a non zero constant cannot cause an error");
+}
+
 void runEngineTests() {
   cout << "--------------------- Starting Engine Tests ---------------------" << endl;
   initializeEngine();
@@ -138,6 +168,8 @@ void runEngineTests() {
   loadStoreConstant();
   storeDoesntChangePtr();
   oneVarCouldBeZero();  
-  nonZeroConstantCannotBeZero();
+  loadsAndStoresDontChangeConstantValues();
+  divideBySymbolCouldCauseError();
+  divideByNonZeroConstantCannotCauseError();
   cout << "-----------------------------------------------------------------" << endl << endl;
 }

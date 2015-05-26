@@ -6,6 +6,7 @@
 #include "SymbolicExecution/Constraint/Symbol.h"
 #include "SymbolicExecution/Constraint/Term.h"
 #include "SymbolicExecution/ConstraintSolver.h"
+#include "SymbolicExecution/OperationResult.h"
 
 #include <map>
 #include <vector>
@@ -49,6 +50,7 @@ class Engine {
   const Constraint* getConstraint(const Symbol* s) const;
   const Symbol* getValueSym(const Symbol* s) const;
   const Symbol* executeBinop(OpCode c, const Symbol* lhs, const Symbol* rhs);
+  OperationResult executeDiv(const Symbol* lhs, const Symbol* rhs);
   const Symbol* allocateStack(SymbolType t);
   void executeStore(const Symbol* val, const Symbol* locationPtr);
   const Symbol* executeLoad(const Symbol* locationPtr);

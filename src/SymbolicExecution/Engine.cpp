@@ -188,6 +188,18 @@ const Symbol* Engine::executeLoad(const Symbol* locationPtr) {
   return resVal;
 }
 
+OperationResult Engine::executeDiv(const Symbol* lhs, const Symbol* rhs) {
+  ConstantInt32 zero(0);
+  Eq denominatorIsZero(getValueSym(rhs), &zero);
+  if (stateAllows(&denominatorIsZero)) {
+    OperationResult opRes(true);
+    return opRes;
+  } else {
+    OperationResult opRes(false);
+    return opRes;
+  }
+}
+
 void Engine::getConstraintState(vector<Constraint*>* constraintState) {
   for (auto entry : symbolicMemory) {
     auto stateConstraint = entry.second.second;

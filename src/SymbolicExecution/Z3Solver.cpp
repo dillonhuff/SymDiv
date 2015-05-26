@@ -80,8 +80,6 @@ bool Z3Solver::constraintsAllow(vector<Constraint*>* state, Constraint* c) {
   z3::expr stateExpr = andConstraints(&ctx, state);
   z3::expr conclusion = toZ3Expr(&ctx, c);
   stateExpr = stateExpr && conclusion;
-  cout << "Expression to allow" << endl;
-  cout << stateExpr << endl;
   z3::solver s(ctx);
   s.add(stateExpr);
   return checkSAT(s);
