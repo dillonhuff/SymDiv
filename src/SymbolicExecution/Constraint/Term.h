@@ -15,7 +15,8 @@ enum TermKind {
   CONSTANT_VALUE,
   MINUS,
   PLUS,
-  TIMES
+  TIMES,
+  DIVIDE
 };
 
 class Term {
@@ -26,6 +27,7 @@ class Term {
   virtual bool isSymbol() const { return false; }
   virtual bool isConstantInt32() const { return false; }
   virtual bool isPlus() const { return false; }
+  virtual bool isDivide() const { return false; }
   virtual bool isMinus() const { return false; }
   virtual bool isBinaryFunction() const { return false; }
 

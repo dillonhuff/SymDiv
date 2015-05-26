@@ -1,4 +1,5 @@
 #include "SymbolicExecution/Constraint/ConstantInt32.h"
+#include "SymbolicExecution/Constraint/Divide.h"
 #include "SymbolicExecution/Constraint/Eq.h"
 #include "SymbolicExecution/Constraint/False.h"
 #include "SymbolicExecution/Constraint/Minus.h"
@@ -154,6 +155,20 @@ void eqAndNEqDifferent() {
   testNEQ(&neq, &eq);
 }
 
+void neqDivide() {
+  Symbol s1(INT_32, 0);
+  Symbol s2(INT_32, 1);
+
+  ConstantInt32 c1(3);
+
+  Divide d1(&s1, &c1);
+
+  NEq neq1(&s1, &d1);
+  NEq neq2(&s2, &d1);
+
+  testNEQ(&neq1, &neq2);
+}
+
 void runConstraintTests() {
   cout << "--------------------- Starting Constraint Tests -----------------" << endl;
   trueEqualsTrue();
@@ -169,5 +184,6 @@ void runConstraintTests() {
   differentConstantsNotEqual();
   differentConstantsNEQ();
   eqAndNEqDifferent();
+  neqDivide();
   cout << "-----------------------------------------------------------------" << endl << endl;
 }
