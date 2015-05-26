@@ -4,12 +4,13 @@
 #include "SymbolicExecution/Constraint/Constraint.h"
 #include "SymbolicExecution/Constraint/Term.h"
 
+#include <memory>
 #include <vector>
 
 class ExpressionFactory {
  protected:
-std::vector<Constraint*> allConstraints;
-std::vector<Term*> allTerms;
+std::vector<std::unique_ptr<Constraint>> allConstraints;
+std::vector<std::unique_ptr<Term>> allTerms;
   int nextSymId;
 
  public:

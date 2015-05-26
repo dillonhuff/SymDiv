@@ -17,6 +17,7 @@ class Symbol : public Term {
 
  public:
   Symbol() { kind = SYMBOL; t = INT_32; id = -1; }
+  virtual ~Symbol() {}
   Symbol(SymbolType st, int i) { t = st; id = i; }
 
   bool isSymbol() const override { return true; }

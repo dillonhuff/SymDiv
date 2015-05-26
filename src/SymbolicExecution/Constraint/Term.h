@@ -26,6 +26,8 @@ class Term {
   TermKind kind;
 
  public:
+  virtual ~Term() {}
+
   virtual bool isSymbol() const { return false; }
   virtual bool isConstantInt32() const { return false; }
   virtual bool isPlus() const { return false; }

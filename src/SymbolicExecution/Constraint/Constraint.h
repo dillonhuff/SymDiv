@@ -17,6 +17,8 @@ class Constraint {
   ConstraintKind kind;
 
  public:
+  virtual ~Constraint() {}
+
   virtual bool operator==(const Constraint& other) const;
   virtual bool operator==(const Constraint* other) const;
   ConstraintKind getKind() const;

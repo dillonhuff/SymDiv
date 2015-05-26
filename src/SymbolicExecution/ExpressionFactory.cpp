@@ -17,43 +17,43 @@ ExpressionFactory::ExpressionFactory() {
 
 Constraint* ExpressionFactory::mkEq(const Term* lhs, const Term* rhs) {
   auto eq = new Eq(lhs, rhs);
-  allConstraints.push_back(eq);
+  allConstraints.push_back(std::unique_ptr<Constraint>(eq));
   return eq;
 }
 
 Term* ExpressionFactory::mkPlus(const Term* lhs, const Term* rhs) {
   auto plus = new Plus(lhs, rhs);
-  allTerms.push_back(plus);
+  allTerms.push_back(std::unique_ptr<Term>(plus));
   return plus;
 }
 
 Term* ExpressionFactory::mkMinus(const Term* lhs, const Term* rhs) {
   auto minus = new Minus(lhs, rhs);
-  allTerms.push_back(minus);
+  allTerms.push_back(std::unique_ptr<Term>(minus));
   return minus;
 }
 
 Term* ExpressionFactory::mkConstantInt32(int val) {
   auto constant = new ConstantInt32(val);
-  allTerms.push_back(constant);
+  allTerms.push_back(std::unique_ptr<Term>(constant));
   return constant;
 }
 
 Term* ExpressionFactory::mkTimes(const Term* lhs, const Term* rhs) {
   auto times = new Times(lhs, rhs);
-  allTerms.push_back(times);
+  allTerms.push_back(std::unique_ptr<Term>(times));
   return times;
 }
 
 Symbol* ExpressionFactory::mkSymbol(SymbolType t) {
   auto s = new Symbol(t, nextSymId);
   nextSymId++;
-  allTerms.push_back(s);
+  allTerms.push_back(std::unique_ptr<Term>(s));
   return s;
 }
 
 Constraint* ExpressionFactory::mkTrue() {
   auto t = new True();
-  allConstraints.push_back(t);
+  allConstraints.push_back(std::unique_ptr<Constraint>(t));
   return t;
 }
