@@ -2,9 +2,11 @@
 #include "SymbolicExecution/Constraint/Divide.h"
 #include "SymbolicExecution/Constraint/Eq.h"
 #include "SymbolicExecution/Constraint/False.h"
+#include "SymbolicExecution/Constraint/Minus.h"
 #include "SymbolicExecution/Constraint/NEq.h"
 #include "SymbolicExecution/Constraint/Plus.h"
 #include "SymbolicExecution/Constraint/Symbol.h"
+#include "SymbolicExecution/Constraint/Times.h"
 #include "SymbolicExecution/Constraint/True.h"
 #include "SymbolicExecution/TestUtils.h"
 #include "SymbolicExecution/Z3Solver.h"
@@ -110,6 +112,37 @@ void simpleNEq() {
   testResult(s.constraintsImply(&st, &aNonZero), "a != 0 -> a != 0");
 }
 
+void simpleMinus() {
+  Symbol a(INT_32, 0);
+  ConstantInt32 zero(0);
+  Minus aMinusA(&a, &a);
+  Eq aMinusAIsZero(&zero, &aMinusA);
+
+  vector<Constraint*> st;
+
+  Z3Solver s;
+  testResult(s.constraintsImply(&st, &aMinusAIsZero), "a - a == 0");
+}
+
+void simpleTimes() {
+  Symbol a(INT_32, 0);
+  Symbol b(INT_32, 1);
+  Symbol c(INT_32, 2);
+
+  Eq bEqC(&b, &c);
+  
+
+  vector<Constraint*> st;
+  st.push_back(&bEqC);
+
+  Times aTimesB(&a, &b);
+  Times cTimesA(&c, &a);
+  Eq aTBEqcTA(&aTimesB, &cTimesA);
+
+  Z3Solver s;
+  testResult(s.constraintsImply(&st, &aTBEqcTA), "b == c -> a*b = c*a");
+}
+
 void runZ3SolverTests() {
   cout << "--------------------- Z3 Solver Tests ---------------------" << endl;
   trueTest();
@@ -119,5 +152,7 @@ void runZ3SolverTests() {
   twoConstantsEq();
   identicalDividesEq();
   simpleNEq();
+  simpleMinus();
+  simpleTimes();
   cout << "-----------------------------------------------------------" << endl;
 }

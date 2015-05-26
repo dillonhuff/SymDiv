@@ -32,6 +32,7 @@ class Term {
   virtual bool isConstantInt32() const { return false; }
   virtual bool isPlus() const { return false; }
   virtual bool isDivide() const { return false; }
+  virtual bool isTimes() const { return false; }
   virtual bool isMinus() const { return false; }
   virtual bool isBinaryFunction() const { return false; }
 

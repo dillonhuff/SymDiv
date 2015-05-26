@@ -45,10 +45,10 @@ bool executeSDiv(llvm::Instruction* instr, llvm::Function* f, Engine* e, map<llv
   return opRes.errorIsPossible();
 }
 
-bool executeAdd(llvm::Instruction* instr, llvm::Function* f, Engine* e, map<llvm::Value*, const Symbol*>* valSyms) {
+bool executeArith(OpCode code, llvm::Instruction* instr, llvm::Function* f, Engine* e, map<llvm::Value*, const Symbol*>* valSyms) {
   auto lhs = (*valSyms)[instr->getOperand(0)];
   auto rhs = (*valSyms)[instr->getOperand(1)];
-  auto result = e->executeBinop(ADD, lhs, rhs);
+  auto result = e->executeBinop(code, lhs, rhs);
   (*valSyms)[instr] = result;
   return false;
 }
@@ -67,9 +67,13 @@ bool executeInstruction(llvm::Instruction* instr, llvm::Function* f, Engine* e, 
   case(llvm::Instruction::SDiv):
     return executeSDiv(instr, f, e, valSyms);
   case(llvm::Instruction::Add):
-    return executeAdd(instr, f, e, valSyms);
+    return executeArith(ADD, instr, f, e, valSyms);
+  case(llvm::Instruction::Mul):
+    return executeArith(MUL, instr, f, e, valSyms);
+  case(llvm::Instruction::Sub):
+    return executeArith(SUB, instr, f, e, valSyms);
   default:
-    llvm::errs() << "Error: Unsupported opcode " << instr->getOpcodeName();
+    llvm::errs() << "Error: Unsupported opcode " << instr->getOpcodeName() << "\n";
     throw;
   }
   return true;

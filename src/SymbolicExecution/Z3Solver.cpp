@@ -1,9 +1,11 @@
 #include "SymbolicExecution/Constraint/ConstantInt32.h"
 #include "SymbolicExecution/Constraint/Divide.h"
 #include "SymbolicExecution/Constraint/Eq.h"
+#include "SymbolicExecution/Constraint/Minus.h"
 #include "SymbolicExecution/Constraint/NEq.h"
 #include "SymbolicExecution/Constraint/Plus.h"
 #include "SymbolicExecution/Constraint/Symbol.h"
+#include "SymbolicExecution/Constraint/Times.h"
 #include "SymbolicExecution/Z3Solver.h"
 
 #include <iostream>
@@ -18,6 +20,12 @@ z3::expr Z3Solver::toZ3Expr(z3::context* ctx, const Term* t) {
   } else if (t->isPlus()) {
     const Plus* tP = static_cast<const Plus*>(t);
     return toZ3Expr(ctx, tP->getLhs()) + toZ3Expr(ctx, tP->getRhs());
+  } else if (t->isMinus()) {
+    auto tM = static_cast<const Minus*>(t);
+    return toZ3Expr(ctx, tM->getLhs()) - toZ3Expr(ctx, tM->getRhs());
+  } else if (t->isTimes()) {
+    auto tT = static_cast<const Times*>(t);
+    return toZ3Expr(ctx, tT->getLhs()) * toZ3Expr(ctx, tT->getRhs());
   } else if (t->isDivide()) {
     auto tD = static_cast<const Divide*>(t);
     return toZ3Expr(ctx, tD->getLhs()) / toZ3Expr(ctx, tD->getRhs());
