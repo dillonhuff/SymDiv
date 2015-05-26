@@ -141,7 +141,7 @@ void differentConstantsNEQ() {
 
   NEq neq(&c1, &c2);
 
-  testNEQ(&neq, &neq);
+  test(&neq, &neq);
 }
 
 void eqAndNEqDifferent() {
