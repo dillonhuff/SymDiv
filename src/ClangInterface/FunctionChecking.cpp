@@ -3,6 +3,8 @@
 #include "SymbolicExecution/Engine.h"
 #include "SymbolicExecution/Z3Solver.h"
 
+#include "llvm/Support/raw_ostream.h"
+
 #include <iostream>
 #include <map>
 
@@ -66,10 +68,14 @@ bool executeInstruction(llvm::Instruction* instr, llvm::Function* f, Engine* e, 
   case(llvm::Instruction::Add):
     return executeAdd(instr, f, e, valSyms);
   default:
-    cout << "Error: Unsupported opcode " << instr->getOpcodeName() << endl;
+    llvm::errs() << "Error: Unsupported opcode " << instr->getOpcodeName();
     throw;
   }
   return true;
+}
+
+void reportDivZero(llvm::Instruction* instr) {
+  llvm::errs() << "Error found div by zero\n";
 }
 
 void executeBody(llvm::Function* f, Engine* e, map<llvm::Value*, const Symbol*>* valSyms) {
@@ -77,7 +83,7 @@ void executeBody(llvm::Function* f, Engine* e, map<llvm::Value*, const Symbol*>*
     for (auto& instr : bb) {
       bool foundError = executeInstruction(&instr, f, e, valSyms);
       if (foundError) {
-	cout << "Found divide by zero error" << endl;
+	reportDivZero(&instr);
 	return;
       }
     }
