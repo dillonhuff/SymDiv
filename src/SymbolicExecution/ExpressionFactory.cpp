@@ -6,6 +6,7 @@
 #include "SymbolicExecution/Constraint/Times.h"
 #include "SymbolicExecution/Constraint/True.h"
 #include "SymbolicExecution/ExpressionFactory.h"
+#include "SymbolicExecution/Type/TypeSystem.h"
 
 #include <vector>
 
@@ -45,11 +46,23 @@ Term* ExpressionFactory::mkTimes(const Term* lhs, const Term* rhs) {
   return times;
 }
 
-Symbol* ExpressionFactory::mkSymbol(SymbolType t) {
+Symbol* ExpressionFactory::mkSymbol(const Type* t) {
   auto s = new Symbol(t, nextSymId);
   nextSymId++;
   allTerms.push_back(std::unique_ptr<Term>(s));
   return s;
+}
+
+Type* ExpressionFactory::mkPtr(const Type* t) {
+  auto ptr = new Ptr(t);
+  allTypes.push_back(std::unique_ptr<Type>(ptr));
+  return ptr;
+}
+
+Type* ExpressionFactory::mkInt(int width) {
+  auto i = new Integer(width);
+  allTypes.push_back(std::unique_ptr<Type>(i));
+  return i;
 }
 
 Constraint* ExpressionFactory::mkTrue() {

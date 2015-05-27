@@ -11,15 +11,18 @@
 
 using namespace std;
 
+Integer integer32 = Integer(32);
+Integer* i32 = &integer32;
+
 void addArguments(llvm::Function* f, Engine* e, map<llvm::Value*, const Symbol*>* valSyms) {
   for (auto& arg : f->getArgumentList()) {
-    (*valSyms)[&arg] = e->addSymbol(INT_32);
+    (*valSyms)[&arg] = e->addSymbol(i32);
   }
   return;
 }
 
 bool executeAlloca(llvm::Instruction* instr, llvm::Function* f, Engine* e, map<llvm::Value*, const Symbol*>* valSyms) {
-  auto s = e->allocateStack(INT_32);
+  auto s = e->allocateStack(i32);
   (*valSyms)[instr] = s;
   return false;
 }

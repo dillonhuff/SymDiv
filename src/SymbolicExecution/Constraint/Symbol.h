@@ -2,6 +2,7 @@
 #define SYMBOL_H
 
 #include "SymbolicExecution/Constraint/Term.h"
+#include "SymbolicExecution/Type/Type.h"
 
 #include <iostream>
 
@@ -12,13 +13,12 @@ enum SymbolType {
 
 class Symbol : public Term {
  protected:
-  SymbolType t;
+  const Type* t;
   int id;
 
  public:
-  Symbol() { kind = SYMBOL; t = INT_32; id = -1; }
   virtual ~Symbol() {}
-  Symbol(SymbolType st, int i) { t = st; id = i; kind = SYMBOL; }
+  Symbol(const Type* st, int i) { t = st; id = i; kind = SYMBOL; }
 
   bool operator==(const Term* other) const override;
   

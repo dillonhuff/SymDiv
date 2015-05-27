@@ -36,13 +36,13 @@ class Engine {
  public:
   Engine(ConstraintSolver* s, ExpressionFactory* factory);
 
-  const Symbol* addSymbol(SymbolType t);
+  const Symbol* addSymbol(const Type* t);
   const Symbol* addConstantInt32(int val);
   const Constraint* getConstraint(const Symbol* s) const;
   const Symbol* getValueSym(const Symbol* s) const;
   const Symbol* executeBinop(OpCode c, const Symbol* lhs, const Symbol* rhs);
   OperationResult executeDiv(const Symbol* lhs, const Symbol* rhs);
-  const Symbol* allocateStack(SymbolType t);
+  const Symbol* allocateStack(const Type* t);
   void executeStore(const Symbol* val, const Symbol* locationPtr);
   const Symbol* executeLoad(const Symbol* locationPtr);
 

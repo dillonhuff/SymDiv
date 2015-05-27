@@ -8,7 +8,9 @@
 #include "SymbolicExecution/Constraint/Symbol.h"
 #include "SymbolicExecution/Constraint/Times.h"
 #include "SymbolicExecution/Constraint/True.h"
+#include "SymbolicExecution/ExpressionFactory.h"
 #include "SymbolicExecution/TestUtils.h"
+#include "SymbolicExecution/Type/TypeSystem.h"
 #include "SymbolicExecution/Z3Solver.h"
 #include "SymbolicExecution/Z3SolverTests.h"
 
@@ -17,7 +19,7 @@
 
 using namespace std;
 
-void trueTest() {
+void trueTest(ExpressionFactory *f) {
   True t;
   vector<Constraint*> st;
   st.push_back(&t);
@@ -25,34 +27,34 @@ void trueTest() {
   testResult(s.constraintsImply(&st, &t), "true implies true");
 }
 
-void trueImpliesFalse() {
+void trueImpliesFalse(ExpressionFactory *f) {
   True t;
   vector<Constraint*> st;
   st.push_back(&t);
-  False f;
+  False fs;
   Z3Solver s;
-  testResult(!s.constraintsImply(&st, &f), "true does not imply false");
+  testResult(!s.constraintsImply(&st, &fs), "true does not imply false");
 }
 
-void aEqualsA() {
-  Symbol a(INT_32, 0);
+void aEqualsA(ExpressionFactory *f) {
+  Symbol a(f->mkInt(32), 0);
   Eq aEqA(&a, &a);
   vector<Constraint*> st;
   Z3Solver s;
   testResult(s.constraintsImply(&st, &aEqA), "a == a");
 }
 
-void transitiveAdd() {
-  Symbol a(INT_32, 0);
-  Symbol b(INT_32, 1);
-  Symbol c(INT_32, 2);
-  Symbol d(INT_32, 3);
-  Symbol e(INT_32, 4);
-  Symbol f(INT_32, 5);
+void transitiveAdd(ExpressionFactory *f) {
+  Symbol a(f->mkInt(32), 0);
+  Symbol b(f->mkInt(32), 1);
+  Symbol c(f->mkInt(32), 2);
+  Symbol d(f->mkInt(32), 3);
+  Symbol e(f->mkInt(32), 4);
+  Symbol fs(f->mkInt(32), 5);
 
   Plus aPlusb(&a, &b);
   Plus cPlusd(&c, &d);
-  Plus ePlusf(&e, &f);
+  Plus ePlusf(&e, &fs);
 
   Eq e1(&aPlusb, &cPlusd);
   Eq e2(&cPlusd, &ePlusf);
@@ -66,7 +68,7 @@ void transitiveAdd() {
   testResult(s.constraintsImply(&st, &e3), "a + b = c + d ^ c + d = e + f -> a + b = e + f");
 }
 
-void twoConstantsEq() {
+void twoConstantsEq(ExpressionFactory *f) {
   ConstantInt32 a(45);
   Eq eq(&a, &a);
 
@@ -76,15 +78,15 @@ void twoConstantsEq() {
   testResult(s.constraintsImply(&st, &eq), "True -> 45 == 45");
 }
 
-void identicalDividesEq() {
+void identicalDividesEq(ExpressionFactory *f) {
   ConstantInt32 a(23);
   ConstantInt32 b(23);
 
-  Symbol c1(INT_32, 0);
-  Symbol c2(INT_32, 0);
+  Symbol c1(f->mkInt(32), 0);
+  Symbol c2(f->mkInt(32), 0);
 
-  Symbol c3(INT_32, 1);
-  Symbol c4(INT_32, 1);
+  Symbol c3(f->mkInt(32), 1);
+  Symbol c4(f->mkInt(32), 1);
 
   Divide d1(&c1, &a);
   Divide d2(&c2, &b);
@@ -99,8 +101,8 @@ void identicalDividesEq() {
   testResult(s.constraintsImply(&st, &eq2), "a == b / 23 -> a == b / 23");
 }
 
-void simpleNEq() {
-  Symbol a(INT_32, 0);
+void simpleNEq(ExpressionFactory *f) {
+  Symbol a(f->mkInt(32), 0);
   ConstantInt32 z(0);
   
   NEq aNonZero(&a, &z);
@@ -112,8 +114,8 @@ void simpleNEq() {
   testResult(s.constraintsImply(&st, &aNonZero), "a != 0 -> a != 0");
 }
 
-void simpleMinus() {
-  Symbol a(INT_32, 0);
+void simpleMinus(ExpressionFactory *f) {
+  Symbol a(f->mkInt(32), 0);
   ConstantInt32 zero(0);
   Minus aMinusA(&a, &a);
   Eq aMinusAIsZero(&zero, &aMinusA);
@@ -124,10 +126,10 @@ void simpleMinus() {
   testResult(s.constraintsImply(&st, &aMinusAIsZero), "a - a == 0");
 }
 
-void simpleTimes() {
-  Symbol a(INT_32, 0);
-  Symbol b(INT_32, 1);
-  Symbol c(INT_32, 2);
+void simpleTimes(ExpressionFactory *f) {
+  Symbol a(f->mkInt(32), 0);
+  Symbol b(f->mkInt(32), 1);
+  Symbol c(f->mkInt(32), 2);
 
   Eq bEqC(&b, &c);
   
@@ -145,14 +147,15 @@ void simpleTimes() {
 
 void runZ3SolverTests() {
   cout << "--------------------- Z3 Solver Tests ---------------------" << endl;
-  trueTest();
-  trueImpliesFalse();
-  aEqualsA();
-  transitiveAdd();
-  twoConstantsEq();
-  identicalDividesEq();
-  simpleNEq();
-  simpleMinus();
-  simpleTimes();
+  ExpressionFactory f;
+  trueTest(&f);
+  trueImpliesFalse(&f);
+  aEqualsA(&f);
+  transitiveAdd(&f);
+  twoConstantsEq(&f);
+  identicalDividesEq(&f);
+  simpleNEq(&f);
+  simpleMinus(&f);
+  simpleTimes(&f);
   cout << "-----------------------------------------------------------" << endl;
 }

@@ -8,35 +8,37 @@
 #include "SymbolicExecution/Constraint/Symbol.h"
 #include "SymbolicExecution/Constraint/True.h"
 #include "SymbolicExecution/ConstraintTests.h"
+#include "SymbolicExecution/ExpressionFactory.h"
 #include "SymbolicExecution/TestUtils.h"
+#include "SymbolicExecution/Type/TypeSystem.h"
 
 #include <iostream>
 
 using namespace std;
 
-void trueEqualsTrue() {
+void trueEqualsTrue(ExpressionFactory* f) {
   True c1;
   True c2;
 
   test(&c1, &c2);
 }
 
-void falseEqualsFalse() {
+void falseEqualsFalse(ExpressionFactory* f) {
   False c1;
   False c2;
 
   test(&c1, &c2);
 }
 
-void falseNEQTrue() {
+void falseNEQTrue(ExpressionFactory* f) {
   False c1;
   True c2;
   testNEQ(&c1, &c2);
 }
 
-void equalSymsEqual() {
-  Symbol s1(INT_32, 0);
-  Symbol s2(INT_32, 1);
+void equalSymsEqual(ExpressionFactory* f) {
+  Symbol s1(f->mkInt(32), 0);
+  Symbol s2(f->mkInt(32), 1);
 
   Eq eq1(&s1, &s2);
   Eq eq2(&s1, &s2);
@@ -44,41 +46,41 @@ void equalSymsEqual() {
   test(&eq1, &eq2);
 }
 
-void sameSymsEqual() {
-  Symbol s1(INT_32, 0);
-  Symbol s2(INT_32, 1);
+void sameSymsEqual(ExpressionFactory* f) {
+  Symbol s1(f->mkInt(32), 0);
+  Symbol s2(f->mkInt(32), 1);
   Eq eq1(&s1, &s2);
 
-  Symbol s3(INT_32, 0);
-  Symbol s4(INT_32, 1);
+  Symbol s3(f->mkInt(32), 0);
+  Symbol s4(f->mkInt(32), 1);
   Eq eq2(&s3, &s4);
 
   test(&eq1, &eq2);
 }
 
-void eqsWithDifferentArgsNotEqual() {
-  Symbol s1(INT_32, 0);
-  Symbol s2(INT_32, 1);
+void eqsWithDifferentArgsNotEqual(ExpressionFactory* f) {
+  Symbol s1(f->mkInt(32), 0);
+  Symbol s2(f->mkInt(32), 1);
   Eq eq1(&s1, &s2);
 
-  Symbol s3(INT_32, 2);
-  Symbol s4(INT_32, 3);
+  Symbol s3(f->mkInt(32), 2);
+  Symbol s4(f->mkInt(32), 3);
   Eq eq2(&s3, &s4);
 
   testNEQ(&eq1, &eq2);
 }
 
-void eqPlusAndEqMinusNotEqual_1() {
-  Symbol s1(INT_32, 0);
-  Symbol s2(INT_32, 1);
-  Symbol s3(INT_32, 2);
+void eqPlusAndEqMinusNotEqual_1(ExpressionFactory* f) {
+  Symbol s1(f->mkInt(32), 0);
+  Symbol s2(f->mkInt(32), 1);
+  Symbol s3(f->mkInt(32), 2);
 
   Plus plus(&s1, &s2);
   Eq plusEq(&s3, &plus);
 
-  Symbol s4(INT_32, 0);
-  Symbol s5(INT_32, 1);
-  Symbol s6(INT_32, 2);
+  Symbol s4(f->mkInt(32), 0);
+  Symbol s5(f->mkInt(32), 1);
+  Symbol s6(f->mkInt(32), 2);
   
   Minus minus(&s4, &s5);
   Eq minusEq(&s6, &minus);
@@ -86,10 +88,10 @@ void eqPlusAndEqMinusNotEqual_1() {
   testNEQ(&plusEq, &minusEq);
 }
 
-void eqPlusAndEqMinusNotEqual_2() {
-  Symbol s1(INT_32, 0);
-  Symbol s2(INT_32, 1);
-  Symbol s3(INT_32, 2);
+void eqPlusAndEqMinusNotEqual_2(ExpressionFactory* f) {
+  Symbol s1(f->mkInt(32), 0);
+  Symbol s2(f->mkInt(32), 1);
+  Symbol s3(f->mkInt(32), 2);
 
   Plus plus(&s1, &s2);
   Eq plusEq(&s3, &plus);
@@ -100,23 +102,23 @@ void eqPlusAndEqMinusNotEqual_2() {
   testNEQ(&plusEq, &minusEq);
 }
 
-void identicalEqsEqual() {
-  Symbol s1(INT_32, 0);
-  Symbol s2(INT_32, 1);
-  Symbol s3(INT_32, 2);
+void identicalEqsEqual(ExpressionFactory* f) {
+  Symbol s1(f->mkInt(32), 0);
+  Symbol s2(f->mkInt(32), 1);
+  Symbol s3(f->mkInt(32), 2);
   Plus plus1(&s1, &s2);
   Eq eq1(&s3, &plus1);
 
-  Symbol s4(INT_32, 0);
-  Symbol s5(INT_32, 1);
-  Symbol s6(INT_32, 2);
+  Symbol s4(f->mkInt(32), 0);
+  Symbol s5(f->mkInt(32), 1);
+  Symbol s6(f->mkInt(32), 2);
   Plus plus2(&s4, &s5);
   Eq eq2(&s6, &plus2);
 
   test(&eq1, &eq2);
 }
 
-void constantsEqual() {
+void constantsEqual(ExpressionFactory* f) {
   ConstantInt32 c1(123);
   ConstantInt32 c2(123);
 
@@ -126,7 +128,7 @@ void constantsEqual() {
   test(&e1, &e2);
 }
 
-void differentConstantsNotEqual() {
+void differentConstantsNotEqual(ExpressionFactory* f) {
   ConstantInt32 c1(12);
   ConstantInt32 c2(-9);
 
@@ -136,7 +138,7 @@ void differentConstantsNotEqual() {
   testNEQ(&e1, &e2);
 }
 
-void differentConstantsNEQ() {
+void differentConstantsNEQ(ExpressionFactory* f) {
   ConstantInt32 c1(3);
   ConstantInt32 c2(-23);
 
@@ -145,7 +147,7 @@ void differentConstantsNEQ() {
   test(&neq, &neq);
 }
 
-void eqAndNEqDifferent() {
+void eqAndNEqDifferent(ExpressionFactory* f) {
   ConstantInt32 c1(3);
   ConstantInt32 c2(-23);
 
@@ -155,9 +157,9 @@ void eqAndNEqDifferent() {
   testNEQ(&neq, &eq);
 }
 
-void neqDivide() {
-  Symbol s1(INT_32, 0);
-  Symbol s2(INT_32, 1);
+void neqDivide(ExpressionFactory* f) {
+  Symbol s1(f->mkInt(32), 0);
+  Symbol s2(f->mkInt(32), 1);
 
   ConstantInt32 c1(3);
 
@@ -171,19 +173,20 @@ void neqDivide() {
 
 void runConstraintTests() {
   cout << "--------------------- Starting Constraint Tests -----------------" << endl;
-  trueEqualsTrue();
-  falseEqualsFalse();
-  falseNEQTrue();
-  sameSymsEqual();
-  equalSymsEqual();
-  eqsWithDifferentArgsNotEqual();
-  eqPlusAndEqMinusNotEqual_1();
-  eqPlusAndEqMinusNotEqual_2();
-  identicalEqsEqual();
-  constantsEqual();
-  differentConstantsNotEqual();
-  differentConstantsNEQ();
-  eqAndNEqDifferent();
-  neqDivide();
+  ExpressionFactory f;
+  trueEqualsTrue(&f);
+  falseEqualsFalse(&f);
+  falseNEQTrue(&f);
+  sameSymsEqual(&f);
+  equalSymsEqual(&f);
+  eqsWithDifferentArgsNotEqual(&f);
+  eqPlusAndEqMinusNotEqual_1(&f);
+  eqPlusAndEqMinusNotEqual_2(&f);
+  identicalEqsEqual(&f);
+  constantsEqual(&f);
+  differentConstantsNotEqual(&f);
+  differentConstantsNEQ(&f);
+  eqAndNEqDifferent(&f);
+  neqDivide(&f);
   cout << "-----------------------------------------------------------------" << endl << endl;
 }

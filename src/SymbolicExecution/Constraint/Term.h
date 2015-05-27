@@ -36,7 +36,6 @@ class Term {
   bool isMinus() const { return kind == MINUS; }
   bool isBinaryFunction() const { return (kind == TIMES) || (kind == PLUS) || (kind == DIVIDE) || (kind == MINUS); }
 
-  virtual bool operator==(const Term& other) const;
   virtual bool operator==(const Term* other) const;
 
   virtual std::string toString() const { throw; }

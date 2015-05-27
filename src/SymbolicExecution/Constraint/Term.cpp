@@ -20,10 +20,6 @@ std::string termKindToString(TermKind k) {
   }
 }
 
-bool Term::operator==(const Term& other) const {
-  return kind == other.kind;
-}
-
 bool Term::operator==(const Term* other) const {
   return kind == other->kind;
 }
