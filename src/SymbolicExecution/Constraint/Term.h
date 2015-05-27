@@ -28,13 +28,13 @@ class Term {
  public:
   virtual ~Term() {}
 
-  virtual bool isSymbol() const { return false; }
-  virtual bool isConstantInt32() const { return false; }
-  virtual bool isPlus() const { return false; }
-  virtual bool isDivide() const { return false; }
-  virtual bool isTimes() const { return false; }
-  virtual bool isMinus() const { return false; }
-  virtual bool isBinaryFunction() const { return false; }
+  bool isSymbol() const { return kind == SYMBOL; }
+  bool isConstantInt32() const { return kind == CONSTANT_VALUE; }
+  bool isPlus() const { return kind == PLUS; }
+  bool isDivide() const { return kind == DIVIDE; }
+  bool isTimes() const { return kind == TIMES; }
+  bool isMinus() const { return kind == MINUS; }
+  bool isBinaryFunction() const { return (kind == TIMES) || (kind == PLUS) || (kind == DIVIDE) || (kind == MINUS); }
 
   virtual bool operator==(const Term& other) const;
   virtual bool operator==(const Term* other) const;

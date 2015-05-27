@@ -10,8 +10,6 @@ class Plus : public BinaryFunction {
     kind = PLUS;
   }
   
-  bool isPlus() const override { return true; }
-
   bool operator==(const Term* other) const override {
     return BinaryFunction::operator==(other);
   }

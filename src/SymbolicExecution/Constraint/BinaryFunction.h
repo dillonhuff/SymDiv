@@ -12,7 +12,6 @@ class BinaryFunction : public Term {
  BinaryFunction(const Term* l, const Term* r)
    : lhs(l), rhs(r) {}
 
-  bool isBinaryFunction() const override { return true; }
   bool operator==(const Term* other) const override;
 
   const Term* getRhs() const { return rhs; }

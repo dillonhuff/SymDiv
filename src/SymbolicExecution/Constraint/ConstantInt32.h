@@ -9,12 +9,13 @@ class ConstantInt32 : public Term {
 
  public:
   ConstantInt32(int v)
-    : value(v) {}
+    : value(v) {
+    kind = CONSTANT_VALUE;
+  }
   
   int getValue() const { return value; }
 
   bool operator==(const Term* other) const override;
-  bool isConstantInt32() const override { return true; }
 
   std::string toString() const override { return std::to_string((long long int) value); }
 };

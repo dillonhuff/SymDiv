@@ -11,8 +11,6 @@ class Times : public BinaryFunction {
   virtual bool operator==(const Term* other) const {
     return BinaryFunction::operator==(other); 
   }
-
-  bool isTimes() const override { return true; }
 };
 
 #endif

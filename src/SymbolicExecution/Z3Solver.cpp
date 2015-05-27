@@ -33,7 +33,7 @@ z3::expr Z3Solver::toZ3Expr(z3::context* ctx, const Term* t) {
     auto tC = static_cast<const ConstantInt32*>(t);
     return ctx->bv_val(tC->getValue(), 32);
   } else {
-    cout << "Error unsupported term" << endl;
+    cout << "Error unsupported term " << t->toString() << endl;
     throw;
   }
 }

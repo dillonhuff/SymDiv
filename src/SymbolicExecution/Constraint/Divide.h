@@ -10,8 +10,6 @@ class Divide : public BinaryFunction {
     kind = DIVIDE;
   }
   
-  bool isDivide() const override { return true; }
-
   bool operator==(const Term* other) const override {
     return BinaryFunction::operator==(other);
   }
