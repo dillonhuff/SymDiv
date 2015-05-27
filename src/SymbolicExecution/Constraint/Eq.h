@@ -14,11 +14,6 @@ class Eq : public BinaryPredicate {
     : BinaryPredicate::BinaryPredicate(l, r) {
     kind = EQ;
   }
-
-  bool operator==(const Constraint* other) const override {
-    return BinaryPredicate::operator==(other);
-  }
-
 };
 
 #endif
