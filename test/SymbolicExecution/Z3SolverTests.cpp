@@ -19,7 +19,7 @@
 
 using namespace std;
 
-void trueTest(ExpressionFactory *f) {
+void trueTest(ExpressionFactory* fac) {
   True t;
   vector<Constraint*> st;
   st.push_back(&t);
@@ -27,34 +27,34 @@ void trueTest(ExpressionFactory *f) {
   testResult(s.constraintsImply(&st, &t), "true implies true");
 }
 
-void trueImpliesFalse(ExpressionFactory *f) {
+void trueImpliesFalse(ExpressionFactory* fac) {
   True t;
   vector<Constraint*> st;
   st.push_back(&t);
-  False fs;
+  False f;
   Z3Solver s;
-  testResult(!s.constraintsImply(&st, &fs), "true does not imply false");
+  testResult(!s.constraintsImply(&st, &f), "true does not imply false");
 }
 
-void aEqualsA(ExpressionFactory *f) {
-  Symbol a(f->mkInt(32), 0);
+void aEqualsA(ExpressionFactory* fac) {
+  Symbol a(fac->mkInt(32), 0);
   Eq aEqA(&a, &a);
   vector<Constraint*> st;
   Z3Solver s;
   testResult(s.constraintsImply(&st, &aEqA), "a == a");
 }
 
-void transitiveAdd(ExpressionFactory *f) {
-  Symbol a(f->mkInt(32), 0);
-  Symbol b(f->mkInt(32), 1);
-  Symbol c(f->mkInt(32), 2);
-  Symbol d(f->mkInt(32), 3);
-  Symbol e(f->mkInt(32), 4);
-  Symbol fs(f->mkInt(32), 5);
+void transitiveAdd(ExpressionFactory* fac) {
+  Symbol a(fac->mkInt(32), 0);
+  Symbol b(fac->mkInt(32), 1);
+  Symbol c(fac->mkInt(32), 2);
+  Symbol d(fac->mkInt(32), 3);
+  Symbol e(fac->mkInt(32), 4);
+  Symbol f(fac->mkInt(32), 5);
 
   Plus aPlusb(&a, &b);
   Plus cPlusd(&c, &d);
-  Plus ePlusf(&e, &fs);
+  Plus ePlusf(&e, &f);
 
   Eq e1(&aPlusb, &cPlusd);
   Eq e2(&cPlusd, &ePlusf);
@@ -65,10 +65,10 @@ void transitiveAdd(ExpressionFactory *f) {
   st.push_back(&e2);
 
   Z3Solver s;
-  testResult(s.constraintsImply(&st, &e3), "a + b = c + d ^ c + d = e + f -> a + b = e + f");
+  testResult(s.constraintsImply(&st, &e3), "a + b == c + d ^ c + d == e + f -> a + b == e + f");
 }
 
-void twoConstantsEq(ExpressionFactory *f) {
+void twoConstantsEq(ExpressionFactory* fac) {
   ConstantInt32 a(45);
   Eq eq(&a, &a);
 
@@ -78,15 +78,15 @@ void twoConstantsEq(ExpressionFactory *f) {
   testResult(s.constraintsImply(&st, &eq), "True -> 45 == 45");
 }
 
-void identicalDividesEq(ExpressionFactory *f) {
+void identicalDividesEq(ExpressionFactory* fac) {
   ConstantInt32 a(23);
   ConstantInt32 b(23);
 
-  Symbol c1(f->mkInt(32), 0);
-  Symbol c2(f->mkInt(32), 0);
+  Symbol c1(fac->mkInt(32), 0);
+  Symbol c2(fac->mkInt(32), 0);
 
-  Symbol c3(f->mkInt(32), 1);
-  Symbol c4(f->mkInt(32), 1);
+  Symbol c3(fac->mkInt(32), 1);
+  Symbol c4(fac->mkInt(32), 1);
 
   Divide d1(&c1, &a);
   Divide d2(&c2, &b);
@@ -101,8 +101,8 @@ void identicalDividesEq(ExpressionFactory *f) {
   testResult(s.constraintsImply(&st, &eq2), "a == b / 23 -> a == b / 23");
 }
 
-void simpleNEq(ExpressionFactory *f) {
-  Symbol a(f->mkInt(32), 0);
+void simpleNEq(ExpressionFactory* fac) {
+  Symbol a(fac->mkInt(32), 0);
   ConstantInt32 z(0);
   
   NEq aNonZero(&a, &z);
@@ -114,8 +114,8 @@ void simpleNEq(ExpressionFactory *f) {
   testResult(s.constraintsImply(&st, &aNonZero), "a != 0 -> a != 0");
 }
 
-void simpleMinus(ExpressionFactory *f) {
-  Symbol a(f->mkInt(32), 0);
+void simpleMinus(ExpressionFactory* fac) {
+  Symbol a(fac->mkInt(32), 0);
   ConstantInt32 zero(0);
   Minus aMinusA(&a, &a);
   Eq aMinusAIsZero(&zero, &aMinusA);
@@ -126,10 +126,10 @@ void simpleMinus(ExpressionFactory *f) {
   testResult(s.constraintsImply(&st, &aMinusAIsZero), "a - a == 0");
 }
 
-void simpleTimes(ExpressionFactory *f) {
-  Symbol a(f->mkInt(32), 0);
-  Symbol b(f->mkInt(32), 1);
-  Symbol c(f->mkInt(32), 2);
+void simpleTimes(ExpressionFactory* fac) {
+  Symbol a(fac->mkInt(32), 0);
+  Symbol b(fac->mkInt(32), 1);
+  Symbol c(fac->mkInt(32), 2);
 
   Eq bEqC(&b, &c);
   
@@ -142,7 +142,7 @@ void simpleTimes(ExpressionFactory *f) {
   Eq aTBEqcTA(&aTimesB, &cTimesA);
 
   Z3Solver s;
-  testResult(s.constraintsImply(&st, &aTBEqcTA), "b == c -> a*b = c*a");
+  testResult(s.constraintsImply(&st, &aTBEqcTA), "b == c -> a*b == c*a");
 }
 
 void runZ3SolverTests() {
