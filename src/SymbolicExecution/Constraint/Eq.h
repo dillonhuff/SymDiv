@@ -19,8 +19,6 @@ class Eq : public BinaryPredicate {
     return BinaryPredicate::operator==(other);
   }
 
-  bool isEq() const override { return true; }
-
 };
 
 #endif

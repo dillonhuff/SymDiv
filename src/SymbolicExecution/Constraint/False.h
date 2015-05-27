@@ -9,7 +9,6 @@ class False : public Constraint {
     kind = FALSE;
   }
 
-  bool isFalse() const override { return true; }
   std::string toString() const override { return "false"; }
 };
 

@@ -17,7 +17,6 @@ class BinaryPredicate : public Constraint {
     kind = EQ;
   }
 
-  virtual bool isBinaryPredicate() const { return true; }
   virtual bool operator==(const Constraint* other) const;
 
   virtual const Term* getLhs() const { return lhs; }

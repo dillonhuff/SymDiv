@@ -18,9 +18,6 @@ class NEq : public BinaryPredicate {
   bool operator==(const Constraint* other) const override {
     return BinaryPredicate::operator==(other);
   }
-
-  bool isNEq() const override { return true; }
-
 };
 
 #endif

@@ -19,14 +19,13 @@ class Constraint {
  public:
   virtual ~Constraint() {}
 
-  virtual bool operator==(const Constraint& other) const;
-  virtual bool operator==(const Constraint* other) const;
-  ConstraintKind getKind() const;
-  virtual bool isBinaryPredicate() const { return false; }
-  virtual bool isTrue() const { return false; }
-  virtual bool isFalse() const { return false; }
-  virtual bool isEq() const { return false; }
-  virtual bool isNEq() const { return false; }
+  virtual bool operator==(const Constraint* other) const { return getKind() == other->getKind(); }
+  ConstraintKind getKind() const { return kind; }
+  bool isBinaryPredicate() const { return (kind == NEQ) || (kind == EQ); }
+  bool isTrue() const { return kind == TRUE; }
+  bool isFalse() const { return kind == FALSE; }
+  bool isEq() const { return kind == EQ; }
+  bool isNEq() const { return kind == NEQ; }
 
   virtual std::string toString() const { throw; }
 };

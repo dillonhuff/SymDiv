@@ -9,7 +9,6 @@ class True : public Constraint {
     kind = TRUE;
   }
 
-  virtual bool isTrue() const { return true; }
   std::string toString() const override { return "true"; }
 };
 

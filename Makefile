@@ -84,6 +84,8 @@ all: set_z3_path \
 	$(BUILD_DIR)/sym_exe_tests \
 	$(BUILD_DIR)/clang_interface
 
+tests: $(BUILD_DIR)/sym_exe_tests
+
 set_z3_path:
 	@export DYLD_LIBRARY_PATH="/Library/lib/"
 

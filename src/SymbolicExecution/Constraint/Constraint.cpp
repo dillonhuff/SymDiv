@@ -12,15 +12,3 @@ std::string constraintKindToString(ConstraintKind k) {
     return "ERROR UNSUPPORTED CONSTRAINT KIND";
   }
 }
-
-bool Constraint::operator==(const Constraint& other) const{
-  return getKind() == other.getKind();
-}
-
-bool Constraint::operator==(const Constraint* other) const{
-  return getKind() == other->getKind();
-}
-
-ConstraintKind Constraint::getKind() const {
-  return kind;
-}
